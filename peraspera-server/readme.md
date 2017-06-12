@@ -1,27 +1,21 @@
-# Laravel PHP Framework
+# Per Aspera
 
-[![Build Status](https://travis-ci.org/laravel/framework.svg)](https://travis-ci.org/laravel/framework)
-[![Total Downloads](https://poser.pugx.org/laravel/framework/d/total.svg)](https://packagist.org/packages/laravel/framework)
-[![Latest Stable Version](https://poser.pugx.org/laravel/framework/v/stable.svg)](https://packagist.org/packages/laravel/framework)
-[![Latest Unstable Version](https://poser.pugx.org/laravel/framework/v/unstable.svg)](https://packagist.org/packages/laravel/framework)
-[![License](https://poser.pugx.org/laravel/framework/license.svg)](https://packagist.org/packages/laravel/framework)
+## Concept
+- Trade Wars 2002 meets Master of Orion meets timer based webgame
+- procedural galaxy
+- timers instead of turns per day
+- progress from a single ship to a galactic empire
+- colonize worlds, build stations, command fleets, mine resources, engage in ship to ship combat
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable, creative experience to be truly fulfilling. Laravel attempts to take the pain out of development by easing common tasks used in the majority of web projects, such as authentication, routing, sessions, queueing, and caching.
+## Game Loops
+- trading cargo between stations and planets
+- colonizing planets by placing a claim and ferrying colonists and supplies
+- building stations by purchasing and transporting construction robots and resources
+- mining asteroids and planets either manually with a ship or automatically with constructed facilities, selling the raw materials to stations and colonies
+- engaging in combat with other players, ship to ship battles involve long range weapons and fighters/marines, ship to station combat, ship to surface combat
+- setting up supply chains involving resource extraction, processing at a station or colony, manufacturing, and sale
+- creation of player guilds with shared ownership of ships, territories, and facilities
+- improvement of planetary status by transporting resources and people as well as building facilities and purchasing goods from the planet
 
-Laravel is accessible, yet powerful, providing tools needed for large, robust applications. A superb inversion of control container, expressive migration system, and tightly integrated unit testing support give you the tools you need to build any application with which you are tasked.
-
-## Official Documentation
-
-Documentation for the framework can be found on the [Laravel website](http://laravel.com/docs).
-
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](http://laravel.com/docs/contributions).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell at taylor@laravel.com. All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT).
+## Board
+[Trello](https://trello.com/b/4fIbYndF/per-aspera)
