@@ -1,0 +1,47 @@
+@import "./variables.scss";
+
+.navmenu {
+	position: absolute;
+	top: 0;
+	background-color: rgba(0,0,0,0.8);
+	height: 60px;
+	width: 100%;
+	padding: 0 10px 0 5px;
+	display: flex;
+	align-items: center;
+	flex-direction: row;
+
+	.title {
+		color: $title-color;
+		font-family: $title-font;
+		font-size: 38px;
+	}
+
+  .logo {
+    height: 50px;
+    width: 50px;
+  }
+
+	ul {
+    margin: 0;
+    padding: 0;
+		height: inherit;
+    display: flex;
+    justify-content: space-between;
+		align-items: center;
+  }
+
+	.menu-toggle {
+		z-index: 1;
+    padding: 0 15px;
+    color: #fff;
+    text-shadow: 0 0 5px rgba(0,0,0,0.3);
+    cursor: pointer;
+    transition: all ease .3s;
+
+    &:hover {
+      color: #afafaf;
+      text-shadow: 0 0 5px rgba(0,0,0,0.5);
+    }
+  }
+}

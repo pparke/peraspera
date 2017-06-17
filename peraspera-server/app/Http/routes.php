@@ -15,7 +15,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/systems', 'SystemController@index');
-Route::get('/systems/{id}', 'SystemController@show');
-
-Route::get('/ships/{id}', 'ShipController@show');
+Route::resource('sectors', 'SectorController');
+Route::resource('systems', 'SystemController');
+Route::resource('ships', 'ShipController');
+Route::get('/ships/{ship_id}/move/{sector_id}', 'ShipController@move');

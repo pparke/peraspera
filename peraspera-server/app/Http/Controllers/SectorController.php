@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
+use App\Sector;
 
 use App\Http\Requests;
 
@@ -15,7 +17,7 @@ class SectorController extends Controller
      */
     public function index()
     {
-        //
+        return response()->json(['sectors' => Sector::all()]);
     }
 
     /**
