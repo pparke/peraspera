@@ -1,0 +1,44 @@
+version: '2'
+
+services:
+
+### Database Data Container ################################
+
+  data:
+    build: ./data
+    volumes:
+      - /var/lib/postgres:/var/lib/postgres
+
+### Node Utilities Container ###########################
+
+#  node:
+#    build:
+#      context: ./node
+#      volumes:
+#        - ${SERVICES}:/home/peraspera/services
+#        - /home/peraspera/server/node_modules
+#      networks:
+#        - backend
+
+### PostgreSQL Container ###################################
+  postgres:
+    container_name: peraspera_postgres
+    build: ./postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: peraspera
+      POSTGRES_USER: peraspera
+      POSTGRES_PASSWORD: adastraperaspera
+    volumes:
+      - ./postgres/sql/:/docker-entrypoint-initdb.d
+    networks:
+      - backend
+
+### Networks Setup ############################################
+
+networks:
+  frontend:
+    driver: "bridge"
+  backend:
+    driver: "bridge"
