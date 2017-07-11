@@ -21,14 +21,12 @@
     "instrument": false
   },
   "dependencies": {
-    "co-pg": "^2.0.1",
     "dotenv": "^2.0.0",
     "kcors": "2",
     "koa": "2",
     "koa-bodyparser": "next",
     "koa-compose": "^2.4.0",
     "koa-morgan": "^1.0.1",
-    "koa-pg": "^0.24.1",
     "koa-router": "next",
     "koa-session2": "^1.0.8",
     "koa-static": "^4.0.1",

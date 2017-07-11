@@ -1,21 +1,17 @@
 import { Store } from 'koa-session2';
 import squel from 'squel';
-import pg from 'pg';
-import copg from 'co-pg';
 import config from '../config';
-const PG = copg(pg);
-const dsn = `postgres://${config.db.user}:${config.db.pass}@${config.db.host}:${config.db.port}/${config.db.name}`;
+import { wrappedPg } from './database';
 
 export default class PGStore extends Store {
   constructor() {
     super();
-    this.connectionString = dsn;
     this.connections = new Map();
   }
 
   async getClient() {
     // get a client connection
-    const [client, done] = await PG.connectPromise(this.connectionString);
+    const { client, done } = await wrappedPg.connect();
     // cache the done fn
     this.connections.set(client, done);
     // return the client for use

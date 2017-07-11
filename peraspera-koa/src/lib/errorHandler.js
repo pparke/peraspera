@@ -3,6 +3,6 @@ export default async function errorHandler(ctx, next) {
     await next();
   }
   catch (err) {
-    ctx.throw(err.message, err.status || 500);
+    ctx.throw(err.status || 500, err.message);
   }
 }
