@@ -35,6 +35,8 @@ services:
     networks:
       - backend
 
+  redis:
+    image: "redis:alpine"
 ### Networks Setup ############################################
 
 networks:
