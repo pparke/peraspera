@@ -6,16 +6,21 @@ const sqp = squel.useFlavour('postgres');
 
 const table = {
   name: 'planets',
-  fields: ['id', 'name', 'description', 'system_id', 'sector_id'],
-  assignable: ['name', 'description', 'system_id', 'sector_id']
+  fields: ['id', 'name', 'description', 'mass', 'radius', 'population', 'temperature', 'atmosphere', 'system_id', 'sector_id'],
+  assignable: ['name', 'description', 'mass', 'radius', 'population', 'temperature', 'atmosphere', 'system_id', 'sector_id']
 };
 
-export class Planet extends Model {
-  constructor({ id, name, description, system_id, orbit_id, sector_id } = {}) {
+export default class Planet extends Model {
+  constructor({ id, name, description, mass, radius, population, temperature, atmosphere, system_id, orbit_id, sector_id } = {}) {
     super();
     this.id = id;
     this.name = name;
     this.description = description;
+		this.mass = mass;
+		this.radius = radius;
+		this.population = population;
+		this.temperature = temperature;
+		this.atmosphere = atmosphere;
     this.system_id = system_id;
     this.orbit_id = orbit_id;
     this.sector_id = sector_id;
@@ -31,9 +36,9 @@ export class Planet extends Model {
 
   async orbit(db) {
     const sql = sqp.select()
-      .from(Orbit.table)
+      .from(Orbit.table.name)
       .where('secondary_body_id = ?', this.id)
-      .where('secondary_body_type = ?', this.table)
+      .where('secondary_body_type = ?', Planet.table.name)
       .limit(1)
       .toString();
 

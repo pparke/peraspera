@@ -9,7 +9,7 @@ const table = {
   assignable: ['coord_x', 'coord_y', 'system_id']
 };
 
-export class Sector extends Model {
+export default class Sector extends Model {
   constructor({ id, coord_x, coord_y, system_id } = {}) {
     super();
     this.id = id;

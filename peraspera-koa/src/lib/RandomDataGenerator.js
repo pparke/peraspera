@@ -54,7 +54,7 @@ export default class RandomDataGenerator {
    /**
     * Internal method that creates a seed hash
     */
-   hash (data) {
+   hash(data) {
      let h, i, n;
      n = 0xefc8249d;
      data = data.toString();
@@ -76,37 +76,44 @@ export default class RandomDataGenerator {
    /**
     * Returns a random integer between 0 and 2^32
     */
-   integer () {
+   integer() {
      return this.rnd() * 0x100000000;// 2^32
    }
 
    /**
     * Returns a random real number between 0 and 1
     */
-   frac () {
+   frac() {
      return this.rnd() + (this.rnd() * 0x200000 | 0) * 1.1102230246251565e-16; // 2^-53
    }
 
    /**
     * Returns a random real number between 0 and 2^32
     */
-   real () {
+   real() {
      return this.integer() + this.frac();
    }
 
    /**
     * Returns a random integer between and including min and max
     */
-   integerInRange (min, max) {
+   integerInRange(min, max) {
      return Math.floor(this.realInRange(0, max - min + 1) + min);
    }
 
    /**
     * Alias of integerInRange
     */
-   between (min, max) {
+   between(min, max) {
      return this.integerInRange(min, max);
    }
+
+	 /**
+	  * Return one or the other
+	  */
+	 either(a, b) {
+		 return [a, b][this.integerInRange(0, 1)];
+	 }
 
    /**
     * Returns a random real number between min and max

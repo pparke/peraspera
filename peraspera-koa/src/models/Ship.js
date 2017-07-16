@@ -18,7 +18,7 @@ const table = {
   ]
 };
 
-export class Ship extends Model {
+export default class Ship extends Model {
   constructor({
     id, name, description, fuel, hull, cargo, crew, hardpoints, power_level,
     ship_type, system_id, sector_id, planet_id, station_id, docked

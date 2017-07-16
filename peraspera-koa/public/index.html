@@ -9,19 +9,7 @@
     <input type="number" value=200 id="mass" name="mass">
     <div id="angle"></div>
     <script src='http://localhost:3000/socket.io/socket.io.js'></script>
-    <script>
-      const socket = io();
-      socket.on('connection', (socket) => {
-        console.log('I connected :)');
-      });
-
-      socket.on('event', (data) => {
-        console.log(`I got some data ${data}`);
-      });
-
-      socket.on('msg', (data) => {
-        console.log(`I got a message ${data}`);
-      });
-    </script>
+    <script src='js/socket.js'></script>
+		<script src='js/game.js'></script>
   </body>
 </html>

@@ -42,19 +42,25 @@ export default class NameGen {
     };
   }
 
-  generate(length) {
-    const name = [];
+  generate(length, numParts = 1) {
+		const parts = [];
 
-    for (let i = 0; i < length; i++) {
-      if (i === 0) {
-        name.push(this.getRandomChar());
-      }
-      else {
-        name.push(this.getNextChar(name[i - 1]));
-      }
-    }
+		for (let p = 0; p < numParts; p++) {
+			let name = '';
 
-    return name.join('');
+			for (let i = 0; i < length; i++) {
+				if (i === 0) {
+					name += this.getRandomChar().toUpperCase();
+				}
+				else {
+					name += this.getNextChar(name[i - 1].toLowerCase());
+				}
+			}
+
+			parts.push(name);
+		}
+
+		return parts.join(' ');
   }
 
   getNextChar(lastChar) {
@@ -66,7 +72,7 @@ export default class NameGen {
       // get a consonant
       return this.getByFrequency(this.frequencies.english.consonants);
     }
-    throw new Error('Last character was not a vowel or a consonant');
+    throw new Error('Last character was not a vowel or a consonant', lastChar);
   }
 
   isVowel(char) {

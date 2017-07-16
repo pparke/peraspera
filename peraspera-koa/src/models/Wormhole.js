@@ -9,7 +9,7 @@ const table = {
   assignable: ['name', 'sector_a_id', 'sector_b_id']
 };
 
-export class Wormhole extends Model {
+export default class Wormhole extends Model {
   constructor({ id, name, sector_a_id, sector_b_id } = {}) {
     super();
     this.id = id;

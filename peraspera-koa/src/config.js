@@ -13,5 +13,37 @@ export default {
     port: process.env.SERVER_DB_PORT || 5432,
     user: process.env.SERVER_DB_USER,
     pass: process.env.SERVER_DB_PASSWORD
-  }
+  },
+	universe: {
+		maxCoord: 2000,
+		starTypes: [
+		  null,
+		  'White Dwarf',
+		  'Red Dwarf',
+		  'Orange',
+		  'Yellow',
+		  'Yellow-White',
+		  'White',
+		  'Blue-White',
+		  'Blue',
+		  'stellar nebula',
+		  'planetary nebula',
+		  'red giant',
+		  'blue giant',
+		  'red supergiant',
+		  'neutron',
+		  'brown dwarf',
+		  'black hole'
+		],
+		starProbabilities: {
+		  'Red Dwarf': 0.8,
+		  'Orange': 0.08,
+		  'White Dwarf': 0.05,
+		  'Yellow': 0.035,
+		  'Yellow-White': 0.02,
+		  'White': 0.007,
+		  'Blue-White': 0.001,
+		  'Blue': 0.0000001
+		}
+	}
 };

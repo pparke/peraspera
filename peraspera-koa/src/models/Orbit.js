@@ -9,23 +9,22 @@ const sqp = squel.useFlavour('postgres');
 const table = {
   name: 'orbits',
   fields: [
-    'id', 'radius', 'period', 'primary_body_id', 'primary_body_type',
+    'id', 'radius', 'primary_body_id', 'primary_body_type',
     'secondary_body_id', 'secondary_body_type'
   ],
   assignable: [
-    'radius', 'period', 'primary_body_id', 'primary_body_type',
+    'radius', 'primary_body_id', 'primary_body_type',
     'secondary_body_id', 'secondary_body_type'
   ]
 };
 
 const orbitable = [System, Planet, Station, Ship];
 
-export class Orbit extends Model {
-  constructor({ id, radius, period, primary_body_id, primary_body_type, secondary_body_id, secondary_body_type } = {}) {
+export default class Orbit extends Model {
+  constructor({ id, radius, primary_body_id, primary_body_type, secondary_body_id, secondary_body_type } = {}) {
     super();
     this.id = id;
     this.radius = radius;
-    this.period = period;
     this.primary_body_id = primary_body_id;
     this.primary_body_type = primary_body_type;
     this.secondary_body_id = secondary_body_id;

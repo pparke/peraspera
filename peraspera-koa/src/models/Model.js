@@ -10,6 +10,21 @@ export default class Model {
     return Object.assign({}, ...props.map(prop => ({ [prop]: o[prop] })));
   }
 
+	get table() {
+		return this.constructor.table.name;
+	}
+
+	get fields() {
+		return this.constructor.table.fields;
+	}
+
+	serialize() {
+		return this.fields.reduce((obj, field) => {
+			obj[field] = this[field];
+			return obj;
+		}, {});
+	}
+
   async save(db) {
     const _class = this.constructor;
     if (!this.id) {
@@ -73,7 +88,7 @@ export default class Model {
       .toString();
 
     const result = await db.query(sql);
-    return result.rows[0];
+    return new ModelClass(result.rows[0]);
   }
 
   static async findAll(db, ModelClass) {
@@ -82,7 +97,7 @@ export default class Model {
       .toString();
 
     const result = await db.query(sql);
-    return result.rows;
+    return result.rows.map(row => new ModelClass(row));
   }
 
   /**

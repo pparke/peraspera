@@ -8,7 +8,7 @@ const table = {
   assignable: ['name']
 };
 
-export class Item extends Model {
+export default class Item extends Model {
   constructor({ id, name } = {}) {
     super();
     this.id = id;

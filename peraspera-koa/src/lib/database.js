@@ -67,6 +67,7 @@ export const database = async function pgMiddleware(ctx, next) {
 		// Since there was an error somewhere down the middleware,
 		// then we need to throw this client away.
     done(e);
+		console.log(e.stack);
     ctx.throw(e.status, e.message);
   }
 	// on the way back up the stack, release the client
