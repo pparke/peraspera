@@ -13,6 +13,7 @@ import Station from '../models/Station';
 import Wormhole from '../models/Wormhole';
 
 export default async function seeder(db, numSystems) {
+  console.log('clearing database...');
   // delete all
   await db.query(sqp.delete().from('stations').toString());
   await db.query('alter sequence stations_id_seq restart');
@@ -28,8 +29,12 @@ export default async function seeder(db, numSystems) {
 
 	const systems = [];
 
+  console.log('beginning system generation...');
   // for 1..N
   for (let i = 0; i < numSystems; i++) {
+    process.stdout.clearLine();
+    process.stdout.cursorTo(0);
+    process.stdout.write(`Creating system ${i} of ${numSystems}`);
     // create system
     // assign random name, star_type, and coords
     const system = new System();
@@ -89,8 +94,49 @@ export default async function seeder(db, numSystems) {
 			}
     }
   }
+  console.log('\nsystem generation complete.');
 
+  console.log('creating wormholes between sectors...');
   // add wormholes between sectors
+  const wormholes = [];
+  const connections = [];
+  systems.forEach((systema) => {
+    process.stdout.clearLine();
+    process.stdout.cursorTo(0);
+    process.stdout.write(`Calculating distances for system ${systema.name}`);
+    const distances = [];
+    systems.forEach((systemb) => {
+      if (systema.id === systemb.id) {
+        return;
+      }
 
-  return { planetCount, stationCount };
+      distances.push({
+        system: systemb.id,
+        distance: Math.hypot(systema.coord_x - systemb.coord_x, systema.coord_y - systemb.coord_y)
+      });
+    });
+
+    distances.sort((a, b) => a.distance - b.distance);
+
+    for (let i = 0; i < rand.between(1, 5); i++) {
+      // don't create wormholes for connections that already exist
+      if (connections.includes(`${distances[i].system}-${systema.id}`)) {
+        continue;
+      }
+      const wormhole = new Wormhole({
+        system_a_id: systema.id,
+        system_b_id: distances[i].system
+      });
+
+      wormholes.push(wormhole);
+      connections.push(`${systema.id}-${distances[i].system}`);
+    }
+  });
+
+  console.log('\nsaving wormholes...')
+  for (let i = 0; i < wormholes.length; i++) {
+    await wormholes[i].save(db);
+  }
+
+  return { planetCount, stationCount, wormholeCount: wormholes.length };
 }

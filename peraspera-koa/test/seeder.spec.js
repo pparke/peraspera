@@ -8,9 +8,9 @@ describe('seeder', () => {
 
   it('test seeding', async () => {
     const { client, done } = await wrappedPg.connect();
-    const { planetCount, stationCount } = await seeder(client, 100);
+    const { planetCount, stationCount, wormholeCount } = await seeder(client, 30);
     console.log(`Created ${planetCount} planets and ${stationCount} stations.`);
     done();
-  });
+  }).timeout(20000);
 
 });

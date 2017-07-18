@@ -1,32 +1,31 @@
 import Model from './Model';
-import Sector from './Sector';
+import System from './System';
 import squel from 'squel';
 const sqp = squel.useFlavour('postgres');
 
 const table = {
-  name: 'sectors',
-  fields: ['id', 'name', 'sector_a_id', 'sector_b_id'],
-  assignable: ['name', 'sector_a_id', 'sector_b_id']
+  name: 'wormholes',
+  fields: ['id', 'system_a_id', 'system_b_id'],
+  assignable: ['system_a_id', 'system_b_id']
 };
 
 export default class Wormhole extends Model {
-  constructor({ id, name, sector_a_id, sector_b_id } = {}) {
+  constructor({ id, system_a_id, system_b_id } = {}) {
     super();
     this.id = id;
-    this.name = name;
-    this.sector_a_id = sector_a_id;
-    this.sector_b_id = sector_b_id;
+    this.system_a_id = system_a_id;
+    this.system_b_id = system_b_id;
   }
 
   static get table() {
     return table;
   }
 
-  async sectorA(db) {
-    return this.belongsTo(db, Sector, 'sector_a_id');
+  async systemA(db) {
+    return this.belongsTo(db, System, 'system_a_id');
   }
 
-  async sectorB(db) {
-    return this.belongsTo(db, Sector, 'sector_b_id');
+  async systemB(db) {
+    return this.belongsTo(db, System, 'system_b_id');
   }
 }

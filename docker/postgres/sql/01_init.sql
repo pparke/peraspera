@@ -57,11 +57,10 @@ CREATE TABLE orbits (
   updated_at          TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
-CREATE TABLE wormhole (
+CREATE TABLE wormholes (
   id            SERIAL PRIMARY KEY,
-  name          TEXT NOT NULL,
-  sector_a_id   INTEGER REFERENCES sectors,
-  sector_b_id   INTEGER REFERENCES sectors,
+  system_a_id   INTEGER REFERENCES systems,
+  system_b_id   INTEGER REFERENCES systems,
   created_at    TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   updated_at    TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );

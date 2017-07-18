@@ -2,13 +2,6 @@ version: '2'
 
 services:
 
-### Database Data Container ################################
-
-  data:
-    build: ./data
-    volumes:
-      - /var/lib/postgres:/var/lib/postgres
-
 ### Node Utilities Container ###########################
 
 #  node:
@@ -32,11 +25,17 @@ services:
       POSTGRES_PASSWORD: adastraperaspera
     volumes:
       - ./postgres/sql/:/docker-entrypoint-initdb.d
+      - postgres_volume:/data/postgres
     networks:
       - backend
 
   redis:
     image: "redis:alpine"
+
+### Volumes ###################################################
+volumes:
+  postgres_volume:
+
 ### Networks Setup ############################################
 
 networks:

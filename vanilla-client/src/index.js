@@ -26,16 +26,16 @@ const input = new Input(
 			}
 		},
 		right: {
-			keydown: () => viewport.move(-10, 0)
-		},
-		left: {
 			keydown: () => viewport.move(10, 0)
 		},
+		left: {
+			keydown: () => viewport.move(-10, 0)
+		},
 		up: {
-			keydown: () => viewport.move(0, 10)
+			keydown: () => viewport.move(0, -10)
 		},
 		down: {
-			keydown: () => viewport.move(0, -10)
+			keydown: () => viewport.move(0, 10)
 		},
 		b: {
 			keydown: () => {
