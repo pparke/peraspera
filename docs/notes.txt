@@ -1,0 +1,31 @@
+public function move($ship_id, $sector_id)
+{
+    $ship = Ship::findOrFail($ship_id);
+    $sector = Sector::findOrFail($sector_id);
+
+    $distance = 0;
+    if ($sector->system === $ship->sector->system) {
+        // calculate distance from current sector
+        $distance = $this->distanceBetween($sector, $ship->sector);
+    } else {
+        // get distance between systems
+        $distance = $this->distanceBetween($sector->system, $ship->sector->system);
+        $distance *= self::SYSTEM_DIST_FACTOR;
+    }
+    // calculate fuel cost and compare to current fuel
+    $fuel_cost = $distance * self::MPG;
+    // if there is enough fuel, set timer that will move the ship
+    if ($fuel_cost < $ship->fuel) {
+
+    }
+    // and deduct the fuel once complete
+    // move ship through intervening sectors?
+    $ship->sector_id = $sector->id;
+    $ship->save();
+
+    return response()->json([
+        'ship' => $ship,
+        'sector' => $ship->sector,
+        'system' => $ship->sector->system
+    ]);
+}
