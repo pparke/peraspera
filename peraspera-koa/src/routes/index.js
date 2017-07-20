@@ -5,3 +5,4 @@ export { default as orbits } from './orbits';
 export { default as planets } from './planets';
 export { default as sectors } from './sectors';
 export { default as wormholes } from './wormholes';
+export { default as game } from './game';

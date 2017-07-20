@@ -3,7 +3,7 @@ import squel from 'squel';
 const sqp = squel.useFlavour('postgres');
 
 const table = {
-  name: 'sectors',
+  name: 'items',
   fields: ['id', 'name'],
   assignable: ['name']
 };

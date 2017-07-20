@@ -4,15 +4,15 @@ import squel from 'squel';
 const sqp = squel.useFlavour('postgres');
 
 const table = {
-  name: 'sectors',
+  name: 'ships',
   fields: [
-    'id', 'name', 'description', 'fuel', 'hull', 'cargo', 'crew', 'hardpoints',
+    'id', 'name', 'description', 'fuel', 'hull_integrity', 'cargo_space', 'crew', 'hardpoints',
     'power_level', 'ship_type', 'system_id', 'sector_id', 'planet_id', 'station_id',
     'docked'
 
   ],
   assignable: [
-    'name', 'description', 'fuel', 'hull', 'cargo', 'crew', 'hardpoints',
+    'name', 'description', 'fuel', 'hull_integrity', 'cargo_space', 'crew', 'hardpoints',
     'power_level', 'ship_type', 'system_id', 'sector_id', 'planet_id', 'station_id',
     'docked'
   ]
@@ -20,7 +20,7 @@ const table = {
 
 export default class Ship extends Model {
   constructor({
-    id, name, description, fuel, hull, cargo, crew, hardpoints, power_level,
+    id, name, description, fuel, hull_integrity, cargo_space, crew, hardpoints, power_level,
     ship_type, system_id, sector_id, planet_id, station_id, docked
   } = {}) {
     super();
@@ -28,8 +28,8 @@ export default class Ship extends Model {
     this.name = name;
     this.description = description;
     this.fuel = fuel;
-    this.hull = hull;
-    this.cargo = cargo;
+    this.hull_integrity = hull_integrity;
+    this.cargo_space = cargo_space;
     this.crew = crew;
     this.hardpoints = hardpoints;
     this.power_level = power_level;

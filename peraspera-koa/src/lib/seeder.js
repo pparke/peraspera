@@ -2,9 +2,10 @@ import { show } from './issud';
 import NameGen from './NameGen';
 import RandomDataGenerator from './RandomDataGenerator';
 import squel from 'squel';
+import config from '../config';
 const sqp = squel.useFlavour('postgres');
 const nameGen = new NameGen();
-const rand = new RandomDataGenerator(['1234', '5678', '7890']);
+const rand = new RandomDataGenerator(config.universe.seed);
 
 import System from '../models/System';
 import Planet from '../models/Planet';

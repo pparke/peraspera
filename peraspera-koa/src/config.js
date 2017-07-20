@@ -15,6 +15,7 @@ export default {
     pass: process.env.SERVER_DB_PASSWORD
   },
 	universe: {
+    seed: ['1234', '5678', '7890'],
 		maxCoord: 2000,
 		starTypes: [
 		  null,
