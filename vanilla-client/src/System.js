@@ -9,8 +9,8 @@ const G = 0.1;
 const TAU = 2 * Math.PI;
 
 export default class System {
-	constructor(id, star) {
-		this.id = id;
+	constructor(star) {
+		this.id = star.id;
 		this.star = star;
 		this.planets = [];
 
@@ -46,8 +46,6 @@ export default class System {
 	}
 
 	render(viewport) {
-		// draw the star
-		this.star.render(viewport);
 		for (const planet of this.planets) {
 			this.drawOrbit(viewport, planet);
 			planet.render(viewport);

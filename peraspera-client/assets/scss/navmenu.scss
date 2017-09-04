@@ -3,7 +3,7 @@
 .navmenu {
 	position: absolute;
 	top: 0;
-	background-color: rgba(0,0,0,0.8);
+	background-color: rgba(14,12,0,0.8);
 	height: 60px;
 	width: 100%;
 	padding: 0 10px 0 5px;
@@ -15,12 +15,8 @@
 		color: $title-color;
 		font-family: $title-font;
 		font-size: 38px;
+		line-height: 38px;
 	}
-
-  .logo {
-    height: 50px;
-    width: 50px;
-  }
 
 	ul {
     margin: 0;

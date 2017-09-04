@@ -18,7 +18,8 @@ export default class Galaxy {
 		const starTypes = await this.getStarTypes();
 		const systems = await this.getSystems();
 		const wormholes = await this.getWormholes();
-		console.log(systems, starTypes)
+		const ships = await this.getShips();
+		console.log(ships)
 		const stars = systems.map(system => {
 			const type = starTypes.find(type => type.id === system.star_type);
 			return {
@@ -65,6 +66,13 @@ export default class Galaxy {
 		return json.wormholes;
 	}
 
+	async getShips() {
+		const response = await fetch(`${config.api.url}/ships`, { method: 'GET' });
+		checkContentType(response);
+		const json = await response.json();
+		return json.ships;
+	}
+
 	findStarAt(x, y) {
 		return this.stars.find(star => {
 			const distance = Math.hypot(x - star.pos.x, y - star.pos.y);
@@ -73,7 +81,9 @@ export default class Galaxy {
 	}
 
 	update(dt) {
-
+		for (const star of this.stars) {
+			star.update(dt);
+		}
 	}
 
 	render(viewport) {

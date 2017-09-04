@@ -1,10 +1,13 @@
 import React from 'react';
 import '../../assets/scss/navitem.scss';
+import { Link } from 'react-router-dom';
 
-export default class Navitem extends React.PureComponent {
-	render() {
-		return (
-				<li id={ this.props.id } className='navitem'>{ this.props.text }</li>
-		);
-	}
-}
+const Navitem = ({ text, link }) => (
+	<li className='navitem'>
+		<Link to={`/${link}`}>
+			{ text }
+		</Link>
+	</li>
+);
+
+export default Navitem;

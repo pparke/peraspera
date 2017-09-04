@@ -1,9 +1,29 @@
 export default {
 	title: 'Per Aspera',
   currentDisplay: 'sector',
+	player: {
+		ship: 2
+	},
   menus: {
     main: {
-      menuItems: ['0', '1', '2']
+      items: [
+				{
+					text: 'System',
+					link: 'system'
+				},
+				{
+					text: 'Galaxy',
+					link: 'galaxy'
+				},
+				{
+					text: 'Ship',
+					link: 'ship'
+				},
+				{
+					text: 'Dashboard',
+					link: 'dashboard'
+				}
+			]
     }
   },
   menuItems: {

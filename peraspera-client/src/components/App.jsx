@@ -1,8 +1,48 @@
 import React from 'react';
+import { Link, Route, Switch } from 'react-router-dom';
+
+// components
+import Navbar from './Navbar';
+import Page from './Page';
+import Pane from './Pane';
+import Logo from '../../assets/svg/logo.svg';
+import Dashboard from './Dashboard';
+
+// styles
 import '../../assets/scss/app.scss';
 
-export default class App extends React.PureComponent {
-	render() {
-		return <div className='app'>{ this.props.children }</div>;
-	}
-}
+// lib
+import { getSystems } from '../lib/api';
+import state from '../../assets/data/initialState';
+
+const SystemPage = () => (
+  <Page title={'Sector'}>
+    <Pane theme='window' getData={getSystems}/>
+    <Pane theme='window' getData={getSystems}/>
+  </Page>
+);
+
+const ShipPage = () => (
+	<Page title={'Ship'}>
+
+	</Page>
+)
+
+const Welcome = () => (
+  <h1>Welcome</h1>
+);
+
+const App = () => (
+	<div className='app'>
+		<Logo className='logo'/>
+		<Navbar title={state.title} items={state.menus.main.items}/>
+		<Switch>
+			<Route exact path='/' component={Welcome}/>
+			<Route path='/system' component={SystemPage} />
+			<Route path='/ship' component={ShipPage} />
+			<Route path='/dashboard' component={Dashboard} />
+		</Switch>
+	</div>
+);
+
+export default App;

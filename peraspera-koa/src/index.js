@@ -22,6 +22,7 @@ const accessLogStream = fs.createWriteStream(
 );
 
 app.use(morgan('combined', { stream: accessLogStream }))
+    .use(morgan('dev'))
     .use(errorHandler)
     .use(cors())
     .use(bodyParser())

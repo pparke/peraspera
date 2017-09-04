@@ -1,7 +1,7 @@
 import React from 'react';
 import Navitem from './Navitem';
 import '../../assets/scss/navmenu.scss';
-import Logo from '../../assets/svg/logo.svg';
+import FontAwesome from 'react-fontawesome';
 
 export default class Navmenu extends React.PureComponent {
 	constructor(props) {
@@ -23,14 +23,14 @@ export default class Navmenu extends React.PureComponent {
 	}
 
 	renderItem(item, i) {
-		return <Navitem key={ `navitem-${i}` } text={ item.get('text') } onClick={ this.props.menuAction.bind(this, item.action) }/>;
+		return <Navitem key={ i.toString() } text={ item.text } link={ item.link } onClick={ this.props.menuAction.bind(this, item.action) }/>;
 	}
 
 	render() {
 		return (
 			<div className='navmenu'>
 				<div className='menu-toggle' onClick={ this.props.toggle }>
-					<Logo className='logo'/>
+					<FontAwesome name='navicon' size='2x' />
 				</div>
 				{ this.renderMenu() }
 			</div>

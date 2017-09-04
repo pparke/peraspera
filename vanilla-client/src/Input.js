@@ -12,26 +12,31 @@ export default class Input {
 }
 
 class Mouse {
-	constructor(element, buttons, mousemove) {
+	constructor(element, handlers) {
+		const { mousemove, mousewheel } = handlers;
 		this.element = element;
 		this.mousemove = mousemove;
+		this.mousewheel = mousewheel;
 
 		this.bound = {};
 		this.bound.mousedown = this.onMouseDown.bind(this);
 		this.bound.mouseup = this.onMouseUp.bind(this);
 		this.bound.mousemove = this.onMouseMove.bind(this);
+		this.bound.mousewheel = this.onMouseWheel.bind(this);
 
 		element.addEventListener('mousedown', this.bound.mousedown, false);
 		element.addEventListener('mouseup', this.bound.mouseup, false);
 		element.addEventListener('mousemove', this.bound.mousemove, false);
+		element.addEventListener('wheel', this.bound.mousewheel, false);
 		// last mouse pos
+		this.lastPos = { x: 0, y: 0 };
 		this.pos = { x: 0, y: 0 };
 		// used to map 0, 1, 2 to buttons
 		this.btnIndex = ['left', 'middle', 'right'];
 		this.buttons = {
-			left: { pressed: false, ondown: buttons.left.ondown, onup: buttons.left.onup },
-			middle: { pressed: false, ondown: buttons.middle.ondown, onup: buttons.middle.onup },
-			right: { pressed: false, ondown: buttons.right.ondown, onup: buttons.right.onup }
+			left: { pressed: false, ondown: handlers.left.ondown, onup: handlers.left.onup },
+			middle: { pressed: false, ondown: handlers.middle.ondown, onup: handlers.middle.onup },
+			right: { pressed: false, ondown: handlers.right.ondown, onup: handlers.right.onup }
 		};
 	}
 
@@ -45,12 +50,21 @@ class Mouse {
 	}
 
 	getElemPos(event) {
-    const elem = event.target;
+    const elem = this.element;
+		const rect = elem.getBoundingClientRect();
     const { offsetLeft, offsetTop, width, height } = elem;
-    const x = event.pageX - offsetLeft;
-    const y = event.pageY - offsetTop;
+    const x = event.clientX - offsetLeft;
+    const y = event.clientY - offsetTop;
+    //const x = event.clientX - rect.left;
+		//const y = event.clientY - rect.top;
     return { x, y };
   }
+
+	debugText(viewport, x, y) {
+		viewport.ctx.fillText(`Mouse Pos x: ${this.pos.x} y: ${this.pos.y}`, x, y);
+		const { x: wx, y: wy } = viewport.toWorldCoords(this.pos.x, this.pos.y);
+		viewport.ctx.fillText(`World Pos x: ${wx} y: ${wy}`, x, y + 20);
+	}
 
 	onMouseDown(e) {
 		e.preventDefault();
@@ -71,11 +85,21 @@ class Mouse {
 	}
 
 	onMouseMove(e) {
+		this.lastPos.x = this.pos.x;
+		this.lastPos.y = this.pos.y;
 		const { x, y } = this.getElemPos(e);
 		this.pos.x = x;
 		this.pos.y = y;
 		if (typeof this.mousemove === 'function') {
 			this.mousemove(this);
+		}
+	}
+
+	onMouseWheel(e) {
+		const delta = -e.deltaY || e.wheelDelta || -e.detail;
+		this.wheelDelta = delta;
+		if (typeof this.mousewheel === 'function') {
+			this.mousewheel(this);
 		}
 	}
 }

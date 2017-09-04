@@ -1,7 +1,7 @@
 import config from '../config';
 import pg from 'pg';
 
-const pool = new pg.Pool({
+export const pool = new pg.Pool({
   user: config.db.user,
   database: config.db.name,
   password: config.db.pass,

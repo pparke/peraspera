@@ -1,5 +1,6 @@
 import { darken } from './util';
 import config from '../config';
+import System from './System';
 
 const TAU = config.constants.TAU;
 
@@ -18,14 +19,34 @@ export default class Star {
 			y: position.y
 		};
 
-		this.systemView = false;
+		this.system = null;
+
+		this.systemVisible = false;
+	}
+
+	update(dt) {
+		if (this.systemVisible) {
+			this.system.update(dt);
+		}
 	}
 
 	render(viewport) {
+		// don't draw if not on screen
+		if (!viewport.onScreen(this.pos.x, this.pos.y)) {
+			return;
+		}
 		const ctx = viewport.ctx;
 		const screenPos = viewport.toScreenCoords(this.pos.x, this.pos.y);
 
-		const radiusMod = this.systemView ? 10 : 1;
+		if (viewport.scale > 4.5) {
+			if (this.system === null) {
+				this.system = new System(this);
+			}
+			this.systemVisible = true;
+			this.system.render(viewport);
+			// TODO where will we add the system to the update loop?
+		}
+		const radiusMod = this.systemVisible ? 10 : 1;
 
 		const corona = ctx.createRadialGradient(
 			screenPos.x,
@@ -50,7 +71,7 @@ export default class Star {
 	 	ctx.fillStyle = corona;
 		ctx.fill();
 
-		if (!this.systemView) {
+		if (!this.systemVisible) {
 			ctx.fillStyle = 'white';
 			ctx.font = '12px serif';
 			ctx.fillText(this.name, screenPos.x - 20, screenPos.y + 20);

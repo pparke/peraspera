@@ -9,9 +9,10 @@ const game = router();
 
 game.get('/join', async (ctx, next) => {
   const { query, db } = ctx;
+  const name = query.name;
 
   const ship = new Ship({
-    name: 'Victory',
+    name,
     description: '',
     fuel: 100,
     hull_integrity: 100,

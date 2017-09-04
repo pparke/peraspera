@@ -49,29 +49,29 @@ const input = new Input(
 	{
 		left: {
 			ondown: (mouse) => {
-				const { x, y } = viewport.toScreenCoords(mouse.pos.x, mouse.pos.y);
+				viewport.onDragStart(mouse.pos.x, mouse.pos.y);
+				console.log(`mouse pos in canvas coords x: ${mouse.pos.x} y: ${mouse.pos.y}`);
+				const { x, y } = viewport.toWorldCoords(mouse.pos.x, mouse.pos.y);
 				const star = galaxy.findStarAt(x, y);
 				console.log(`x: ${x} y: ${y} viewport position: ${JSON.stringify(viewport.position)} star: ${JSON.stringify(star)}`);
-				let systemToDisplay = null;
-				if (systems[star.id] !== undefined) {
-					systemToDisplay = systems[star.id];
-				}
-				else {
-					systemToDisplay = new System(star.id, star);
-					systems[star.id] = systemToDisplay;
-				}
-				star.systemView = true;
-				currentSystem = systemToDisplay;
-				mainLoop.addToUpdate(systemToDisplay);
-				viewport.removeToRender(galaxy);
-				viewport.addToRender(systemToDisplay);
 			}
 		},
 		middle: {},
-		right: {}
+		right: {},
+		mousemove: (mouse) => {
+			if (mouse.buttons.left.pressed) {
+				viewport.onDrag(mouse);
+			}
+		},
+		mousewheel: (mouse) => {
+			viewport.zoom(mouse.wheelDelta, mouse.pos.x, mouse.pos.y);
+		}
 	}
 );
 mainLoop.addToUpdate(viewport);
+
+// debug
+viewport.addToDebug(input.mouse);
 
 function init() {
 	console.log('init');

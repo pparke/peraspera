@@ -1,5 +1,5 @@
 import React from 'react';
-import { connect } from 'react-redux';
+//import { connect } from 'react-redux';
 import Navitem from './Navitem';
 import Navmenu from './Navmenu';
 import '../../assets/scss/navbar.scss';
@@ -20,18 +20,27 @@ class Navbar extends React.Component {
 	}
 
   menuAction(action) {
-    
+
   }
 
 	render() {
 		return (
 			<nav className='navbar'>
-				<Navmenu title={ this.props.title } items={ this.props.items } open={ this.state.menuOpen } toggle={ this.menuToggle } menuAction={ this.menuAction } />
+				<Navmenu
+					title={ this.props.title }
+					items={ this.props.items }
+					open={ this.state.menuOpen }
+					toggle={ this.menuToggle }
+					menuAction={ this.menuAction }
+				/>
 			</nav>
 		);
 	}
 }
 
+export default Navbar;
+
+/*
 const itemsSelector = state => state.getIn(['menus', 'main', 'menuItems']).map(id => state.getIn(['menuItems', id]));
 
 function mapStateToProps(state) {
@@ -42,3 +51,4 @@ function mapStateToProps(state) {
 }
 
 export default connect(mapStateToProps)(Navbar);
+*/
