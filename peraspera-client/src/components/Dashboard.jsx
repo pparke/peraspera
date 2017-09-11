@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 
 // components
 import Pane from './Pane';
@@ -10,7 +11,11 @@ import state from '../../assets/data/initialState';
 // lib
 import { getShips, getSystems, joinGame } from '../lib/api';
 
-export default class Dashboard extends React.Component {
+function mapStateToProps(state) {
+   return { playerShip: state.getIn(['player', 'ship']) };
+}
+
+class Dashboard extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -26,11 +31,15 @@ export default class Dashboard extends React.Component {
   }
 
   async getInfo() {
-    const ship = await getShips(state.player.ship);
-    this.setState({ ship });
-    const system = await getSystems(ship.system_id);
-    this.setState({ system });
-    console.log(system);
+    const ship = await getShips(this.props.playerShip);
+	if (ship) {
+	    this.setState({ ship });
+		const system = await getSystems(ship.system_id);
+		if (system) {
+			this.setState({ system });
+			console.log(system);
+		}
+	}
   }
 
   render() {
@@ -62,3 +71,5 @@ export default class Dashboard extends React.Component {
     )
   }
 }
+
+export default connect(mapStateToProps)(Dashboard);

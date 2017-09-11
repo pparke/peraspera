@@ -1,12 +1,12 @@
 export default {
 	title: 'Per Aspera',
-  currentDisplay: 'sector',
+	currentDisplay: 'sector',
 	player: {
-		ship: 2
+		ship: 1
 	},
-  menus: {
-    main: {
-      items: [
+ 	menus: {
+		main: {
+			items: [
 				{
 					text: 'System',
 					link: 'system'
