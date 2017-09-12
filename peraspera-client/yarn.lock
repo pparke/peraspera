@@ -1594,6 +1594,10 @@ falafel@^1.0.1:
     isarray "0.0.1"
     object-keys "^1.0.6"
 
+fast-apply@0.0.3:
+  version "0.0.3"
+  resolved "https://registry.yarnpkg.com/fast-apply/-/fast-apply-0.0.3.tgz#7791bb3f7f76b7064c0b73bc3e75bfad8553c861"
+
 fastparse@^1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/fastparse/-/fastparse-1.1.1.tgz#d1e2643b38a94d7583b479060e6c4affc94071f8"
@@ -3211,6 +3215,10 @@ q@^1.1.2:
   version "1.5.0"
   resolved "https://registry.yarnpkg.com/q/-/q-1.5.0.tgz#dd01bac9d06d30e6f219aecb8253ee9ebdc308f1"
 
+qs@5.2.0:
+  version "5.2.0"
+  resolved "https://registry.yarnpkg.com/qs/-/qs-5.2.0.tgz#a9f31142af468cb72b25b30136ba2456834916be"
+
 qs@6.4.0, qs@~6.4.0:
   version "6.4.0"
   resolved "https://registry.yarnpkg.com/qs/-/qs-6.4.0.tgz#13e26d28ad6b0ffaa91312cd3bf708ed351e7233"
@@ -3410,6 +3418,13 @@ reduce-function-call@^1.0.1:
   resolved "https://registry.yarnpkg.com/reduce-function-call/-/reduce-function-call-1.0.2.tgz#5a200bf92e0e37751752fe45b0ab330fd4b6be99"
   dependencies:
     balanced-match "^0.4.2"
+
+redux-api@^0.11.0:
+  version "0.11.0"
+  resolved "https://registry.yarnpkg.com/redux-api/-/redux-api-0.11.0.tgz#13bd26900abf51c9b814c7653f0039339cb9ddac"
+  dependencies:
+    fast-apply "0.0.3"
+    qs "5.2.0"
 
 redux@^3.6.0:
   version "3.6.0"
