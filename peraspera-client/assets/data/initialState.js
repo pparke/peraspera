@@ -26,6 +26,22 @@ export default {
 			]
     }
   },
+  systems: {
+	  byId: {},
+	  allIds: []
+  },
+  sectors: {
+	  byId: {},
+	  allIds: []
+  },
+  planets: {
+	  byId: {},
+	  allIds: []
+  },
+  ships: {
+	  byId: {},
+	  allIds: []
+  },
   menuItems: {
     '0': {
       text: 'Sector',

@@ -6,13 +6,12 @@ import Pane from './Pane';
 
 // assets
 import '../../assets/scss/dashboard.scss';
-import state from '../../assets/data/initialState';
 
 // lib
 import { getShips, getSystems, joinGame } from '../lib/api';
 
 function mapStateToProps(state) {
-   return { playerShip: state.getIn(['player', 'ship']) };
+   return { playerShip: state.player.ship };
 }
 
 class Dashboard extends React.Component {
