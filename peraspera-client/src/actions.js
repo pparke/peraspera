@@ -1,3 +1,5 @@
+import config from '../config';
+
 export function setState(state) {
 	return {
 		type: 'SET_STATE',
@@ -26,15 +28,6 @@ export function showShipDetails(state) {
 	}
 }
 
-export function receiveSectorDetails(sector, json) {
-	return {
-		type: 'RECEIVE_SECTOR_DETAILS',
-		sector,
-		data: json.data,
-		receivedAt: Date.now()
-	}
-}
-
 export function receiveGalaxyDetails(json) {
 	return {
 		type: 'RECEIVE_GALAXY_DETAILS',
@@ -43,21 +36,49 @@ export function receiveGalaxyDetails(json) {
 	}
 }
 
-export function receiveShipDetails(json) {
+export const requestSector = sector => ({
+	type: 'REQUEST_SECTOR',
+	sector
+})
+
+export function receiveSector(id, json) {
 	return {
-		type: 'RECEIVE_SHIP_DETAILS',
-		data: json.data,
+		type: 'RECEIVE_SECTOR',
+		id,
+		sector: json.sectors,
+		receivedAt: Date.now()
+	}
+}
+
+export const requestShip = ship => ({
+	type: 'REQUEST_SHIP',
+	ship
+})
+
+export function receiveShip(id, json) {
+	console.log('receive ship', id, json)
+	return {
+		type: 'RECEIVE_SHIP',
+		id,
+		ship: json.ships,
 		receivedAt: Date.now()
 	}
 }
 
 // http://redux.js.org/docs/advanced/AsyncActions.html
-export function fetchSectorDetails(sector) {
+export function fetchShip(ship) {
 	return function (dispatch) {
-		dispatch(showSectorMap);
+		return fetch(`${config.api.url}/ships/${ship}`, { method: 'GET' })
+		.then(response => response.json())
+		.then(json => dispatch(receiveShip(ship, json)));
+	}
+}
 
-		return fetch(`http://localhost:3000/sectors/${sector}`)
+export function fetchSector(sector) {
+	return function (dispatch) {
+
+		return fetch(`${config.api.url}/sectors/${sector}`, { method: 'GET' })
 			.then(response => response.json())
-			.then(json => dispatch(receiveSectorDetails(sector, json)));
+			.then(json => dispatch(receiveSector(sector, json)));
 	}
 }

@@ -2,7 +2,8 @@ export default {
 	title: 'Per Aspera',
 	currentDisplay: 'sector',
 	player: {
-		ship: 1
+		ship: 1,
+		sector: 1
 	},
  	menus: {
 		main: {
@@ -27,20 +28,12 @@ export default {
     }
   },
   systems: {
-	  byId: {},
-	  allIds: []
   },
   sectors: {
-	  byId: {},
-	  allIds: []
   },
   planets: {
-	  byId: {},
-	  allIds: []
   },
   ships: {
-	  byId: {},
-	  allIds: []
   },
   menuItems: {
     '0': {
