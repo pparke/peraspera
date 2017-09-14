@@ -1,4 +1,4 @@
-import config from '../config';
+import { createEndpoint } from './actions/rest';
 
 export function setState(state) {
 	return {
@@ -36,49 +36,6 @@ export function receiveGalaxyDetails(json) {
 	}
 }
 
-export const requestSector = sector => ({
-	type: 'REQUEST_SECTOR',
-	sector
-})
-
-export function receiveSector(id, json) {
-	return {
-		type: 'RECEIVE_SECTOR',
-		id,
-		sector: json.sectors,
-		receivedAt: Date.now()
-	}
-}
-
-export const requestShip = ship => ({
-	type: 'REQUEST_SHIP',
-	ship
-})
-
-export function receiveShip(id, json) {
-	console.log('receive ship', id, json)
-	return {
-		type: 'RECEIVE_SHIP',
-		id,
-		ship: json.ships,
-		receivedAt: Date.now()
-	}
-}
-
-// http://redux.js.org/docs/advanced/AsyncActions.html
-export function fetchShip(ship) {
-	return function (dispatch) {
-		return fetch(`${config.api.url}/ships/${ship}`, { method: 'GET' })
-		.then(response => response.json())
-		.then(json => dispatch(receiveShip(ship, json)));
-	}
-}
-
-export function fetchSector(sector) {
-	return function (dispatch) {
-
-		return fetch(`${config.api.url}/sectors/${sector}`, { method: 'GET' })
-			.then(response => response.json())
-			.then(json => dispatch(receiveSector(sector, json)));
-	}
-}
+export const { read: shipRead } = createEndpoint('ships');
+export const { read: sectorRead } = createEndpoint('sectors');
+export const { read: systemRead } = createEndpoint('systems');

@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { fetchShip, fetchSector } from '../actions';
+import { shipRead, sectorRead, systemRead } from '../actions';
 
 // components
 import Pane from './Pane';
@@ -8,8 +8,7 @@ import Pane from './Pane';
 // assets
 import '../../assets/scss/dashboard.scss';
 
-// lib
-import { getShips, getSystems, joinGame } from '../lib/api';
+const joinGame = function(){};
 
 class Dashboard extends React.Component {
   constructor(props) {
@@ -18,36 +17,24 @@ class Dashboard extends React.Component {
       ship: {},
       system: {}
     };
-
-    this.getInfo = this.getInfo.bind(this);
   }
 
   componentDidMount() {
-    const { dispatch, fetchSector, fetchShip, player } = this.props;
+    const { dispatch, sectorRead, shipRead, systemRead, player } = this.props;
     console.log('props are =>', this.props)
-    dispatch(fetchShip(player.ship));
-    dispatch(fetchSector(1));
+    dispatch(shipRead(player.ship));
+    dispatch(sectorRead(1));
+    dispatch(systemRead(1));
   }
 
   componentWillReceiveProps(next) {
     console.log('next props', next);
   }
 
-  async getInfo() {
-    const ship = await getShips(this.props.playerShip);
-  	if (ship) {
-  	    this.setState({ ship });
-  		const system = await getSystems(ship.system_id);
-  		if (system) {
-  			this.setState({ system });
-  			console.log(system);
-  		}
-  	}
-  }
-
   render() {
     const ship = this.props.ship;
     const system = this.props.system;
+    console.log('ship', ship, 'system', system)
     return (
       <div className='dashboard'>
         <Pane theme={'clear'} title={'DASHBOARD'}>
@@ -75,13 +62,18 @@ class Dashboard extends React.Component {
   }
 }
 
-const mapStateToProps = state => ({
-  fetchShip,
-  fetchSector,
-  player: state.player,
-  sector: state.sectors[state.player.sector] || {},
-  ship: state.ships[state.player.ship] || {},
-  system: {}
-});
+const mapStateToProps = state => {
+    console.log('state is', state)
+    const { player } = state.main;
+    return {
+      shipRead,
+      sectorRead,
+      systemRead,
+      player: player,
+      sector: state.sectors[player.sector] || {},
+      ship: state.ships[player.ship] || {},
+      system: state.systems[player.system] || {}
+  }
+};
 
 export default connect(mapStateToProps)(Dashboard);

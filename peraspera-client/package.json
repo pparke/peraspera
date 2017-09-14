@@ -14,10 +14,10 @@
   "devDependencies": {
     "babel-core": "^6.24.0",
     "babel-loader": "^6.4.0",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-polyfill": "^6.23.0",
     "babel-preset-latest": "^6.24.0",
     "babel-preset-react": "^6.23.0",
-    "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "css-loader": "^0.27.3",
     "file-loader": "^0.10.1",
     "group-css-media-queries-loader": "^1.0.0",
@@ -32,7 +32,6 @@
   },
   "dependencies": {
     "classnames": "^2.2.5",
-    "immutable": "^3.8.1",
     "localforage": "^1.5.0",
     "react": "^15.4.2",
     "react-dom": "^15.4.2",
@@ -40,7 +39,6 @@
     "react-redux": "^5.0.3",
     "react-router-dom": "next",
     "redux": "^3.6.0",
-    "redux-api": "^0.11.0",
     "redux-thunk": "^2.2.0",
     "vivus": "^0.4.0"
   }

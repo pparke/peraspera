@@ -3,7 +3,8 @@ export default {
 	currentDisplay: 'sector',
 	player: {
 		ship: 1,
-		sector: 1
+		sector: 1,
+		system: 1
 	},
  	menus: {
 		main: {
