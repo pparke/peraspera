@@ -39,3 +39,4 @@ export function receiveGalaxyDetails(json) {
 export const { read: shipRead } = createEndpoint('ships');
 export const { read: sectorRead } = createEndpoint('sectors');
 export const { read: systemRead } = createEndpoint('systems');
+export const { read: wormholeRead } = createEndpoint('wormhole');

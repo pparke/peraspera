@@ -1,6 +1,5 @@
 import Model from './Model';
 import System from './System';
-import Orbit from './Orbit';
 import squel from 'squel';
 const sqp = squel.useFlavour('postgres');
 
@@ -11,7 +10,7 @@ const table = {
 };
 
 export default class Planet extends Model {
-  constructor({ id, name, description, mass, radius, population, temperature, atmosphere, system_id, orbit_id, sector_id } = {}) {
+  constructor({ id, name, description, mass, radius, population, temperature, atmosphere, system_id, sector_id } = {}) {
     super();
     this.id = id;
     this.name = name;
@@ -22,7 +21,6 @@ export default class Planet extends Model {
 		this.temperature = temperature;
 		this.atmosphere = atmosphere;
     this.system_id = system_id;
-    this.orbit_id = orbit_id;
     this.sector_id = sector_id;
   }
 
@@ -32,35 +30,5 @@ export default class Planet extends Model {
 
   async system(db) {
     return this.belongsTo(db, System, 'system_id');
-  }
-
-  async orbit(db) {
-    const sql = sqp.select()
-      .from(Orbit.table.name)
-      .where('secondary_body_id = ?', this.id)
-      .where('secondary_body_type = ?', Planet.table.name)
-      .limit(1)
-      .toString();
-
-    const result = await db.query(sql);
-    return new Orbit(result.rows[0]);
-  }
-
-  async orbits(db) {
-    const orbit = await this.orbit;
-    const sql = sqp.select()
-      .from(System.table)
-  }
-
-  async orbitedBy(db) {
-    const sql = sqp.select()
-      .from(Orbit.table)
-      .where('primary_body_id = ?', this.id)
-      .where('primary_body_type = ?', this.table)
-      .limit(1)
-      .toString();
-
-    const result = await db.query(sql);
-    return new Orbit(result.rows[0]);
   }
 }

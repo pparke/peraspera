@@ -46,17 +46,6 @@ CREATE TABLE sectors (
   system_id   INTEGER REFERENCES systems
 );
 
-CREATE TABLE orbits (
-  id                  SERIAL PRIMARY KEY,
-  radius              INTEGER NOT NULL,
-  primary_body_id     INTEGER NOT NULL,
-  primary_body_type   TEXT NOT NULL,
-  secondary_body_id   INTEGER NOT NULL,
-  secondary_body_type TEXT NOT NULL,
-  created_at          TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-  updated_at          TIMESTAMPTZ NOT NULL DEFAULT NOW()
-);
-
 CREATE TABLE wormholes (
   id            SERIAL PRIMARY KEY,
   system_a_id   INTEGER REFERENCES systems,
@@ -69,11 +58,10 @@ CREATE TABLE planets (
   id          SERIAL PRIMARY KEY,
   name        TEXT NOT NULL,
   description TEXT NOT NULL,
-	mass				INTEGER NOT NULL,
-	radius			INTEGER NOT NULL,
-	population	INTEGER DEFAULT 0,
-	temperature	INTEGER,
-	atmosphere	TEXT,
+	mass			REAL NOT NULL,
+	population		BIGINT DEFAULT 0,
+	temperature		INTEGER,
+	atmosphere		TEXT,
   system_id   INTEGER REFERENCES systems,
   sector_id   INTEGER REFERENCES sectors,
   created_at  TIMESTAMPTZ NOT NULL DEFAULT NOW(),
@@ -84,7 +72,6 @@ CREATE TABLE stations (
   id          SERIAL PRIMARY KEY,
   name        TEXT NOT NULL,
   system_id   INTEGER REFERENCES systems,
-  orbit_id    INTEGER REFERENCES orbits,
   sector_id   INTEGER REFERENCES sectors,
   created_at  TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   updated_at  TIMESTAMPTZ NOT NULL DEFAULT NOW()
@@ -114,7 +101,7 @@ CREATE TABLE ships (
   crew            INTEGER NOT NULL DEFAULT 100,
   hardpoints      INTEGER NOT NULL DEFAULT 10,
   power_level     INTEGER NOT NULL DEFAULT 100,
-  ship_type       INTEGER REFERENCES ship_type,
+  ship_type       INTEGER REFERENCES ship_type NOT NULL,
   system_id       INTEGER NOT NULL REFERENCES systems,
   sector_id       INTEGER NOT NULL REFERENCES sectors,
   planet_id       INTEGER REFERENCES planets,

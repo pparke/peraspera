@@ -12,6 +12,7 @@ function showSectorMap(state, sectorId) {
 const ships = createReducer('ships');
 const sectors = createReducer('sectors');
 const systems = createReducer('systems');
+const wormholes = createReducer('wormholes');
 
 function main(state = {}, action) {
 	switch(action.type) {

@@ -11,12 +11,19 @@ export default class Viewport {
 			x: 0,
 			y: 0
 		};
+		this.mousePos = {
+			x: 0,
+			y: 0
+		}
 
 		this.center = {
 			x: Math.floor(width/2),
 			y: Math.floor(height/2)
 		};
 
+		// horiz scaling, horiz skewing,
+		// vert skewing, vert scaling,
+		// horiz moving, vert moving
 		this.transform = {
 			default: [1,0,0,1,0,0],
 			current: [1,0,0,1,0,0],
@@ -63,23 +70,28 @@ export default class Viewport {
 	}
 
 	updateTransform() {
-		this.dirty = false;
-		this.transform.current[0] = this.scale.current;
-		this.transform.current[1] = 0;
-		this.transform.current[2] = 0;
-		this.transform.current[3] = this.scale.current;
-		this.transform.current[4] = -(this.position.x * this.transform.current[0] + this.position.y * this.transform.current[2]);
-		this.transform.current[5] = -(this.position.x * this.transform.current[1] + this.position.y * this.transform.current[3]);
+		const current = this.transform.current;
+		const inverse = this.transform.inverse;
+		const position = this.position;
+		const scale = this.scale;
 
-		this.scale.inverse = 1 / this.scale.current;
+		this.dirty = false;
+		this.transform.current[0] = scale.current; // horiz scale
+		this.transform.current[1] = 0;					// horiz skew
+		this.transform.current[2] = 0;					// vert skew
+		this.transform.current[3] = scale.current;	// vert scale
+		this.transform.current[4] = position.x;//-(position.x * current[0] + position.y * current[2]);
+		this.transform.current[5] = position.y;//-(position.x * current[1] + position.y * current[3]);
+
+		this.scale.inverse = 1 / scale.current;
 		// calculate the inverse transformation
-		const cross = this.transform.current[0] * this.transform.current[3] - this.transform.current[1] * this.transform.current[2];
-		this.transform.inverse[0] =  this.transform.current[3] / cross;
-		this.transform.inverse[1] = -this.transform.current[1] / cross;
-		this.transform.inverse[2] = -this.transform.current[2] / cross;
-		this.transform.inverse[3] =  this.transform.current[0] / cross;
-		this.transform.inverse[4] = (this.transform.current[1] * this.transform.current[5] - this.transform.current[3] * this.transform.current[4]) / cross;
-    this.transform.inverse[5] = (this.transform.current[2] * this.transform.current[4] - this.transform.current[0] * this.transform.current[5]) / cross;
+		const cross = current[0] * current[3] - current[1] * current[2];
+		this.transform.inverse[0] =  current[3] / cross;
+		this.transform.inverse[1] = -current[1] / cross;
+		this.transform.inverse[2] = -current[2] / cross;
+		this.transform.inverse[3] =  current[0] / cross;
+		this.transform.inverse[4] = (current[1] * current[5] - current[3] * current[4]) / cross;
+		this.transform.inverse[5] = (current[2] * current[4] - current[0] * current[5]) / cross;
 	}
 
 	addToRender(elem) {
@@ -99,12 +111,9 @@ export default class Viewport {
 	}
 
 	toScreenCoords(x, y) {
-		if (this.dirty) {
-			this.updateTransform();
-		}
 		return {
-			x: x * this.transform.current[0] + y * this.transform.current[2] + this.transform.current[4],
-			y: x * this.transform.current[1] + y * this.transform.current[3] + this.transform.current[5]
+			x: x + this.position.x, //x * this.transform.current[0] + y * this.transform.current[2] + this.transform.current[4],
+			y: y + this.position.y //x * this.transform.current[1] + y * this.transform.current[3] + this.transform.current[5]
 		};
   }
 
@@ -112,12 +121,20 @@ export default class Viewport {
 		if (this.dirty) {
 			this.updateTransform();
 		}
+		this.applyTransform();
+		// remove the translation by substracting the origin
 		const xx = x - this.transform.current[4];
 		const yy = y - this.transform.current[5];
-		return {
-			x: xx * this.transform.inverse[0] + yy * this.transform.inverse[2],
-      y: xx * this.transform.inverse[1] + yy * this.transform.inverse[3]
+
+		const inverse = this.transform.inverse;
+
+		const coords = {
+			x: xx * inverse[0] + yy * inverse[2],
+			y: xx * inverse[1] + yy * inverse[3]
 		};
+
+		this.resetTransform();
+		return coords;
 	}
 
 	onScreen(x, y) {
@@ -166,21 +183,25 @@ export default class Viewport {
 		this.ctx.fillStyle = this.bgColor;
 		this.ctx.fillRect(0, 0, this.width, this.height);
 		this.ctx.strokeStyle = 'white';
-		const { x: wx, y: wy } = this.toWorldCoords(0, 0);
-		this.ctx.strokeRect(wx, wy, this.width, this.height);
-		this.applyTransform();
 		this.debugText();
+		
+		// draw a circle where the world coords of the mouse are
+		this.ctx.arc(this.mousePos.x, this.mousePos.y, 10, 0, 2 * Math.PI, false);
+		this.ctx.fillStyle = 'yellow';
+		this.ctx.fill();
 		// draw all elements present on the viewport
 		for (const elem of this.toRender) {
 			elem.render(this);
 		}
-		this.resetTransform();
+		this.applyTransform();
+		//this.resetTransform();
 	}
 
 	debugText() {
 		this.ctx.fillStyle = '#fff';
 		this.ctx.font = '15px serif';
-		let { x, y } = this.toScreenCoords(10, 50);
+		let x = 10;
+		let y = 50;
 		this.ctx.fillText(`Position: x: ${this.position.x} y: ${this.position.y}`, x, y);
 		for (const elem of this.debug) {
 			y += 15;

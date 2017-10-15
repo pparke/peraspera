@@ -49,3 +49,17 @@ export async function joinGame() {
 	const json = await response.json();
 	return json.ship;
 }
+
+export async function move(dest) {
+	const data = {
+		ship: 1,
+		to: dest
+	}
+	const response = await fetch(`${config.api.url}/game/move`, {
+		method: 'POST',
+		body: JSON.stringify(data)
+	});
+	checkContentType(response);
+	const json = await response.json();
+	return json.move;
+}

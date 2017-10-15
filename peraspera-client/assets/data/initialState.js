@@ -6,7 +6,7 @@ export default {
 		sector: 1,
 		system: 1
 	},
- 	menus: {
+	menus: {
 		main: {
 			items: [
 				{
@@ -26,28 +26,33 @@ export default {
 					link: 'dashboard'
 				}
 			]
-    }
-  },
-  systems: {
-  },
-  sectors: {
-  },
-  planets: {
-  },
-  ships: {
-  },
-  menuItems: {
-    '0': {
-      text: 'Sector',
-      action: 'SHOW_SECTOR_MAP'
-    },
-    '1': {
-      text: 'Galaxy',
-      action: 'SHOW_GALAXY_MAP'
-    },
-    '2': {
-      text: 'Ship',
-      action: 'SHOW_SHIP_DETAILS'
-    }
-  }
+		}
+	},
+	systems: {
+		ids: []
+	},
+	sectors: {
+		ids: []
+	},
+	planets: {
+		ids: []
+	},
+	ships: {
+		ids: []
+	},
+	menuItems: {
+		'0': {
+			text: 'Sector',
+			action: 'SHOW_SECTOR_MAP'
+		},
+		'1': {
+			text: 'Galaxy',
+			action: 'SHOW_GALAXY_MAP'
+		},
+		'2': {
+			text: 'Ship',
+			action: 'SHOW_SHIP_DETAILS'
+		},
+		ids: []
+	}
 };

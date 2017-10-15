@@ -7,7 +7,9 @@ import { randomColor } from './util';
 
 window.onload = init;
 
-const viewport = new Viewport(document.body.scrollWidth, document.body.scrollHeight);
+const vpc = document.getElementById('viewport');
+console.log('viewport width', vpc.offsetWidth)
+const viewport = new Viewport(vpc.offsetWidth, 600);
 const mainLoop = new MainLoop();
 
 const systems = {};
@@ -53,12 +55,14 @@ const input = new Input(
 				console.log(`mouse pos in canvas coords x: ${mouse.pos.x} y: ${mouse.pos.y}`);
 				const { x, y } = viewport.toWorldCoords(mouse.pos.x, mouse.pos.y);
 				const star = galaxy.findStarAt(x, y);
+				document.getElementById('inspector').innerHTML = JSON.stringify(star);
 				console.log(`x: ${x} y: ${y} viewport position: ${JSON.stringify(viewport.position)} star: ${JSON.stringify(star)}`);
 			}
 		},
 		middle: {},
 		right: {},
 		mousemove: (mouse) => {
+			viewport.mousePos = mouse.pos;
 			if (mouse.buttons.left.pressed) {
 				viewport.onDrag(mouse);
 			}
@@ -75,6 +79,6 @@ viewport.addToDebug(input.mouse);
 
 function init() {
 	console.log('init');
-	document.body.appendChild(viewport.canvas);
+	document.getElementById('viewport').appendChild(viewport.canvas);
 	mainLoop.start();
 }

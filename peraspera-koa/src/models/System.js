@@ -1,5 +1,6 @@
 import Model from './Model';
 import Planet from './Planet';
+import Sector from './Sector';
 import NameGen from '../lib/NameGen';
 import RandomDataGenerator from '../lib/RandomDataGenerator';
 import squel from 'squel';
@@ -16,25 +17,29 @@ const table = {
 };
 
 export default class System extends Model {
-  constructor({ id, name, description, star_type, coord_x, coord_y, created_at, updated_at } = {}) {
-    super();
-    this.id = id;
-    this.name = name || nameGen.generate(rand.between(5, 10), rand.either(1, 2));
-    this.description = description || '';
-    this.star_type = star_type || starTypes.indexOf(System.starTypeByFrequency(starProbabilities));
-    this.coord_x = coord_x || rand.between(0, maxCoord);
-    this.coord_y = coord_y || rand.between(0, maxCoord);
-    this.created_at = created_at;
-    this.updated_at = updated_at;
-  }
+	constructor({ id, name, description, star_type, coord_x, coord_y, created_at, updated_at } = {}) {
+		super();
+		this.id = id;
+		this.name = name || nameGen.generate(rand.between(5, 10), rand.either(1, 2));
+		this.description = description || '';
+		this.star_type = star_type || starTypes.indexOf(System.starTypeByFrequency(starProbabilities));
+		this.coord_x = coord_x || rand.between(0, maxCoord);
+		this.coord_y = coord_y || rand.between(0, maxCoord);
+		this.created_at = created_at;
+		this.updated_at = updated_at;
+	}
 
-  static get table() {
-    return table;
-  }
+	static get table() {
+		return table;
+	}
 
 	async planets(db) {
 		return this.hasMany(db, Planet, 'system_id');
 	}
+
+    async sectors(db) {
+        return this.hasMany(db, Sector, 'system_id');
+    }
 
 	static async getStarTypeId(db, name) {
 		const sql = sqp.select()

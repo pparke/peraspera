@@ -29,7 +29,7 @@ const ShipPage = () => (
 )
 
 const Welcome = () => (
-  <h1>Welcome</h1>
+  <h1 className='welcome'>Welcome</h1>
 );
 
 const App = () => (

@@ -6,7 +6,7 @@ const systems = resource(router(), 'systems', 'systems');
 
 systems.get('/:id/detail', async (ctx, next) => {
 	const { id } = ctx.params;
-  const { db } = ctx;
+	const { db } = ctx;
 
 	const system = await System.find(db, System, id);
 	let planets = await system.planets(db);
@@ -22,11 +22,36 @@ systems.get('/:id/detail', async (ctx, next) => {
 		return wormhole.system_a_id === system.id ? wormhole.systemB(db) : wormhole.systemA(db);
 	}));
 
+	let sectors = await system.sectors(db);
+
 	ctx.body = {};
 	ctx.body.system = system;
 	ctx.body.system.planets = planets;
 	ctx.body.system.wormholes = wormholes;
-  await next();
+	ctx.body.system.sectors = sectors;
+	await next();
+});
+
+systems.get('/:id/sideload', async (ctx, next) => {
+	const { id } = ctx.params;
+	const { db } = ctx;
+
+	const system = await System.find(db, System, id);
+	const planets = await system.planets(db);
+	const wormholes = await system.wormholes(db);
+	const sectors = await system.sectors(db);
+
+	system.planets = planets.map(p => p.id);
+	system.wormholes = wormholes.map(s => s.id);
+	system.sectors = sectors.map(s => s.id);
+
+	ctx.body = {};
+	ctx.body.systems = system;
+	ctx.body.planets = planets;
+	ctx.body.wormholes = wormholes;
+	ctx.body.sectors = sectors;
+
+	await next();
 });
 
 export default systems;

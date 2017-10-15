@@ -1,14 +1,15 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { shipRead, sectorRead, systemRead } from '../actions';
+import { shipRead, sectorRead, systemRead, wormholeRead } from '../actions';
+import { joinGame, move } from '../lib/api';
 
 // components
 import Pane from './Pane';
+import Stats from './Stats';
 
 // assets
 import '../../assets/scss/dashboard.scss';
 
-const joinGame = function(){};
 
 class Dashboard extends React.Component {
   constructor(props) {
@@ -23,8 +24,9 @@ class Dashboard extends React.Component {
     const { dispatch, sectorRead, shipRead, systemRead, player } = this.props;
     console.log('props are =>', this.props)
     dispatch(shipRead(player.ship));
-    dispatch(sectorRead(1));
+    dispatch(sectorRead());
     dispatch(systemRead(1));
+
   }
 
   componentWillReceiveProps(next) {
@@ -34,28 +36,34 @@ class Dashboard extends React.Component {
   render() {
     const ship = this.props.ship;
     const system = this.props.system;
-    console.log('ship', ship, 'system', system)
+    const sectors = this.props.sectors;
+    console.log('ship', ship, 'system', system, 'sectors', sectors)
     return (
       <div className='dashboard'>
         <Pane theme={'clear'} title={'DASHBOARD'}>
-          <div className='stats'>
-            <h3 className='header'>Ship</h3>
-            <ul>
-              <li>Name: {ship.name}</li>
-              <li>Fuel: {ship.fuel}</li>
-              <li>Hull: {ship.hull_integrity}</li>
-              <li>Cargo Space: {ship.cargo_space}</li>
-              <li>Crew: {ship.crew}</li>
-              <li>Power: {ship.power_level}</li>
-            </ul>
-          </div>
-          <div className='stats'>
-            <h3 className='header'>System</h3>
-            <ul>
-              <li>Name: {system.name}</li>
-            </ul>
-          </div>
-          <button style={{width: '100px', height: '30px'}} onClick={joinGame}>Join</button>
+            <Stats header={'Ship'} items={[
+                `Name: ${ship.name}`,
+                `Fuel: ${ship.fuel}`,
+                `Hull: ${ship.hull_integrity}`,
+                `Cargo Space: ${ship.cargo_space}`,
+                `Crew: ${ship.crew}`,
+                `Power: ${ship.power_level}`
+            ]}
+            />
+            <Stats header='System' items={[
+                `Name: ${system.name}`,
+                `Coordinates: ${system.coord_x} ${system.coord_y}`
+            ]}
+            />
+
+            <Stats header={'Sectors'} items={sectors.map(sector => {
+                return `id: ${sector.id} Coordinates: ${sector.coord_x} ${sector.coord_y}`
+            })}
+            />
+
+            <Stats header='Wormholes' items={[]} />
+            <button style={{width: '100px', height: '30px'}} onClick={joinGame}>Join</button>
+            <button style={{width: '100px', height: '30px'}} onClick={move}>Move</button>
         </Pane>
       </div>
     )
@@ -65,14 +73,16 @@ class Dashboard extends React.Component {
 const mapStateToProps = state => {
     console.log('state is', state)
     const { player } = state.main;
+    const { sectors, ships, systems } = state;
     return {
       shipRead,
       sectorRead,
       systemRead,
       player: player,
-      sector: state.sectors[player.sector] || {},
-      ship: state.ships[player.ship] || {},
-      system: state.systems[player.system] || {}
+      sector: sectors[player.sector] || {},
+      sectors: sectors.ids.map(k => sectors[k]) || [],
+      ship: ships[player.ship] || {},
+      system: systems[player.system] || {}
   }
 };
 

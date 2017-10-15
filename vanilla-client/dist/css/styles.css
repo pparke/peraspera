@@ -1,3 +1,40 @@
 body {
-  overflow: hidden;
+  padding: 0;
+  margin: 0;
+}
+
+.app {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 2px;
+    grid-auto-rows: minmax(100px, auto);
+}
+.viewport {
+    background-color: black;
+    grid-column: 1 / 3;
+    grid-row: 1 / 2;
+}
+.inspector {
+    background-color: #1f1f66;
+    color: #11aa99;
+    grid-column: 3 / 4;
+    grid-row: 1 / 2;
+}
+.console {
+    background-color: green;
+    grid-column: 1 / 4;
+    grid-row: 2 / 4;
+}
+
+.console textarea,
+.console textarea:focus {
+    width: 100%;
+    height: 100%;
+    padding: 15px;
+    font-size: 18px;
+    font-family: monospace;
+    border: none;
+    outline: none;
+    background-color: #1f1f1f;
+    color: #00fff7;
 }

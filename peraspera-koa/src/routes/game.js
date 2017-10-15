@@ -8,47 +8,51 @@ const rand = new RandomDataGenerator(config.universe.seed);
 const game = router();
 
 game.get('/join', async (ctx, next) => {
-  const { query, db } = ctx;
-  const name = query.name;
+    const { query, db } = ctx;
+    const name = query.name;
 
-  const ship = new Ship({
-    name,
-    description: '',
-    fuel: 100,
-    hull_integrity: 100,
-    cargo_space: 10,
-    crew: 1,
-    hardpoints: 2,
-    power_level: 100,
-    ship_type: 1,
-    sector_id: 1 // TODO
-  });
+    const ship = new Ship({
+        name,
+        description: '',
+        fuel: 100,
+        hull_integrity: 100,
+        cargo_space: 10,
+        crew: 1,
+        hardpoints: 2,
+        power_level: 100,
+        ship_type: 1,
+        sector_id: 1 // TODO
+    });
 
-  // get the max id
-  let result;
-  try {
-    result = await db.query('select id from systems order by id desc limit 1');
-  }
-  catch (err) {
-    console.log(err);
-    ctx.throw(err.status, err);
-  }
+    // get the max id
+    let result;
+    try {
+        result = await db.query('select id from systems order by id desc limit 1');
+    }
+    catch (err) {
+        console.log(err);
+        ctx.throw(err.status, err);
+    }
 
-  if (result.rowCount === 0) {
-    ctx.throw(500, new Error('No systems present in the DB'));
-  }
+    if (result.rowCount === 0) {
+        ctx.throw(500, new Error('No systems present in the DB'));
+    }
 
-  const maxId = result.rows[0].id;
-  const startSystem = rand.between(1, maxId);
+    const maxId = result.rows[0].id;
+    const startSystem = rand.between(1, maxId);
 
-  ship.system_id = startSystem;
+    ship.system_id = startSystem;
 
-  await ship.save(db);
+    await ship.save(db);
 
-  ctx.body = ctx.body || {};
-  ctx.body.ship = ship;
+    ctx.body = ctx.body || {};
+    ctx.body.ship = ship;
 
-  await next();
+    await next();
 });
+
+game.post('/move', async (ctx, next) => {
+    const { body } = ctx.request;
+})
 
 export default game;

@@ -50,15 +50,15 @@ class Mouse {
 	}
 
 	getElemPos(event) {
-    const elem = this.element;
+		const elem = this.element;
 		const rect = elem.getBoundingClientRect();
-    const { offsetLeft, offsetTop, width, height } = elem;
-    const x = event.clientX - offsetLeft;
-    const y = event.clientY - offsetTop;
-    //const x = event.clientX - rect.left;
-		//const y = event.clientY - rect.top;
-    return { x, y };
-  }
+		const { offsetLeft, offsetTop, width, height } = elem;
+		//const x = event.clientX - offsetLeft;
+		//const y = event.clientY - offsetTop;
+		const x = event.clientX - rect.left;
+		const y = event.clientY - rect.top;
+		return { x, y };
+	}
 
 	debugText(viewport, x, y) {
 		viewport.ctx.fillText(`Mouse Pos x: ${this.pos.x} y: ${this.pos.y}`, x, y);
@@ -110,29 +110,29 @@ class Keys {
 		// keys is a proxy that lazily creates each key
 		// object as needed
 		this.keys = new Proxy({}, {
-      get(target, name) {
-        if (!target.hasOwnProperty(name)) {
-          target[name] = { pressed: false };
-        }
-        return target[name];
-      }
-    });
+			get(target, name) {
+				if (!target.hasOwnProperty(name)) {
+					target[name] = { pressed: false };
+				}
+				return target[name];
+			}
+		});
 
 		this.bindKeys(keys);
 	}
 
 	bindKeys(keys) {
 		mousetrap.reset();
-    // bind each key
-    for (const key in keys) {
-      if (keys.hasOwnProperty(key)) {
+		// bind each key
+		for (const key in keys) {
+			if (keys.hasOwnProperty(key)) {
 				mousetrap.bind(key, () => this.keyDown(key), 'keydown');
-        mousetrap.bind(key, () => this.keyUp(key), 'keyup');
-        const { keydown, keyup } = keys[key];
-        this.keys[key].keydown = keydown;
-        this.keys[key].keyup = keyup;
-      }
-    }
+				mousetrap.bind(key, () => this.keyUp(key), 'keyup');
+				const { keydown, keyup } = keys[key];
+				this.keys[key].keydown = keydown;
+				this.keys[key].keyup = keyup;
+			}
+		}
 	}
 
 	keyDown(k) {

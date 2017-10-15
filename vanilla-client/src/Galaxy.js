@@ -42,6 +42,8 @@ export default class Galaxy {
 			w.system_b = systems.find(s => s.id === w.system_b_id);
 			return w;
 		});
+		console.log('stars', this.stars)
+		console.log('ships', ships)
 		console.log('wormholes', this.wormholes)
 	}
 
