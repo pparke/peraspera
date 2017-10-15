@@ -36,7 +36,7 @@ export default class Star {
 			return;
 		}
 		const ctx = viewport.ctx;
-		const screenPos = viewport.toScreenCoords(this.pos.x, this.pos.y);
+		const screenPos = {x: this.pos.x, y: this.pos.y}//viewport.toWorldCoords(this.pos.x, this.pos.y);
 
 		if (viewport.scale > 4.5) {
 			if (this.system === null) {

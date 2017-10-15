@@ -52,7 +52,6 @@ const input = new Input(
 		left: {
 			ondown: (mouse) => {
 				viewport.onDragStart(mouse.pos.x, mouse.pos.y);
-				console.log(`mouse pos in canvas coords x: ${mouse.pos.x} y: ${mouse.pos.y}`);
 				const { x, y } = viewport.toWorldCoords(mouse.pos.x, mouse.pos.y);
 				const star = galaxy.findStarAt(x, y);
 				document.getElementById('inspector').innerHTML = JSON.stringify(star);
@@ -62,7 +61,8 @@ const input = new Input(
 		middle: {},
 		right: {},
 		mousemove: (mouse) => {
-			viewport.mousePos = mouse.pos;
+			const worldPos = viewport.toWorldCoords(mouse.pos.x, mouse.pos.y);
+			viewport.mousePos = worldPos;
 			if (mouse.buttons.left.pressed) {
 				viewport.onDrag(mouse);
 			}

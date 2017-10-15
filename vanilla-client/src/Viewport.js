@@ -37,9 +37,9 @@ export default class Viewport {
 			max: 100
 		};
 
-		this.zoomSpeed = 0.2;
+		this.rotate = 0;
 
-		this.dirty = true;
+		this.zoomSpeed = 0.5;
 
 		this.toRender = new Set();
 		this.debug = new Set();
@@ -62,9 +62,7 @@ export default class Viewport {
 	}
 
 	applyTransform() {
-		if(this.dirty){
-			this.updateTransform();
-		}
+		this.updateTransform();
 
 		this.ctx.setTransform(...this.transform.current);
 	}
@@ -73,25 +71,23 @@ export default class Viewport {
 		const current = this.transform.current;
 		const inverse = this.transform.inverse;
 		const position = this.position;
-		const scale = this.scale;
+		const scale = this.scale.current;
+		const rotate = this.rotate;
 
-		this.dirty = false;
-		this.transform.current[0] = scale.current; // horiz scale
-		this.transform.current[1] = 0;					// horiz skew
-		this.transform.current[2] = 0;					// vert skew
-		this.transform.current[3] = scale.current;	// vert scale
+		this.transform.current[0] = Math.cos(rotate) * scale; // horiz scale
+		this.transform.current[1] = Math.sin(rotate) * scale;					// horiz skew
+		this.transform.current[2] = -Math.sin(rotate) * scale;					// vert skew
+		this.transform.current[3] = Math.cos(rotate) * scale;	// vert scale
 		this.transform.current[4] = position.x;//-(position.x * current[0] + position.y * current[2]);
 		this.transform.current[5] = position.y;//-(position.x * current[1] + position.y * current[3]);
 
-		this.scale.inverse = 1 / scale.current;
+		this.scale.inverse = 1 / scale;
 		// calculate the inverse transformation
 		const cross = current[0] * current[3] - current[1] * current[2];
 		this.transform.inverse[0] =  current[3] / cross;
 		this.transform.inverse[1] = -current[1] / cross;
 		this.transform.inverse[2] = -current[2] / cross;
 		this.transform.inverse[3] =  current[0] / cross;
-		this.transform.inverse[4] = (current[1] * current[5] - current[3] * current[4]) / cross;
-		this.transform.inverse[5] = (current[2] * current[4] - current[0] * current[5]) / cross;
 	}
 
 	addToRender(elem) {
@@ -118,10 +114,6 @@ export default class Viewport {
   }
 
 	toWorldCoords(x, y) {
-		if (this.dirty) {
-			this.updateTransform();
-		}
-		this.applyTransform();
 		// remove the translation by substracting the origin
 		const xx = x - this.transform.current[4];
 		const yy = y - this.transform.current[5];
@@ -133,7 +125,6 @@ export default class Viewport {
 			y: xx * inverse[1] + yy * inverse[3]
 		};
 
-		this.resetTransform();
 		return coords;
 	}
 
@@ -150,7 +141,6 @@ export default class Viewport {
 	move(x, y) {
 		this.position.x += x;
 		this.position.y += y;
-		this.dirty = true;
 	}
 
 	onDragStart(x, y) {
@@ -166,25 +156,25 @@ export default class Viewport {
 	}
 
 	zoom(delta, x, y) {
-		if (this.dirty) {
-			this.updateTransform();
-		}
 		let amount = Math.exp((delta / 120) * this.zoomSpeed);
 		this.scale.current *= amount;
-		console.log('scale is now', this.scale.current)
 		this.position.x = x - (x - this.position.x) * amount;
 		this.position.y = y - (y - this.position.y) * amount;
-		this.dirty = true;
 	}
 
 	update() {
-		// clear the whole canvas
+		// reset transform to clear
 		this.resetTransform();
+
+		// clear the whole canvas
 		this.ctx.fillStyle = this.bgColor;
 		this.ctx.fillRect(0, 0, this.width, this.height);
 		this.ctx.strokeStyle = 'white';
 		this.debugText();
-		
+
+		// change back to the current transform
+		this.applyTransform();
+
 		// draw a circle where the world coords of the mouse are
 		this.ctx.arc(this.mousePos.x, this.mousePos.y, 10, 0, 2 * Math.PI, false);
 		this.ctx.fillStyle = 'yellow';
@@ -193,8 +183,6 @@ export default class Viewport {
 		for (const elem of this.toRender) {
 			elem.render(this);
 		}
-		this.applyTransform();
-		//this.resetTransform();
 	}
 
 	debugText() {
@@ -203,6 +191,9 @@ export default class Viewport {
 		let x = 10;
 		let y = 50;
 		this.ctx.fillText(`Position: x: ${this.position.x} y: ${this.position.y}`, x, y);
+		y += 15;
+		const tc = this.transform.current;
+		this.ctx.fillText(`Transform: a: ${tc[0]} b: ${tc[1]} c: ${tc[2]} d: ${tc[3]} e: ${tc[4]} f: ${tc[5]}`, x, y)
 		for (const elem of this.debug) {
 			y += 15;
 			elem.debugText(this, x, y);

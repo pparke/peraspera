@@ -96,6 +96,7 @@ class Mouse {
 	}
 
 	onMouseWheel(e) {
+		e.preventDefault();
 		const delta = -e.deltaY || e.wheelDelta || -e.detail;
 		this.wheelDelta = delta;
 		if (typeof this.mousewheel === 'function') {

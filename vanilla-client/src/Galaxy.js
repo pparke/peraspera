@@ -92,8 +92,8 @@ export default class Galaxy {
 		const { ctx } = viewport;
 		ctx.strokeStyle = '#dadada';
 		for (const wormhole of this.wormholes) {
-			const a = viewport.toScreenCoords(wormhole.system_a.coord_x, wormhole.system_a.coord_y);
-			const b = viewport.toScreenCoords(wormhole.system_b.coord_x, wormhole.system_b.coord_y);
+			const a = {x: wormhole.system_a.coord_x, y:wormhole.system_a.coord_y}//viewport.toWorldCoords(wormhole.system_a.coord_x, wormhole.system_a.coord_y);
+			const b = {x: wormhole.system_b.coord_x, y:wormhole.system_b.coord_y}//viewport.toWorldCoords(wormhole.system_b.coord_x, wormhole.system_b.coord_y);
 			ctx.beginPath();
 			ctx.moveTo(a.x, a.y);
 			ctx.lineTo(b.x, b.y);
