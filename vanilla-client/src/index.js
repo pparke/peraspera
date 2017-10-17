@@ -54,7 +54,7 @@ const input = new Input(
 				viewport.onDragStart(mouse.pos.x, mouse.pos.y);
 				const { x, y } = viewport.toWorldCoords(mouse.pos.x, mouse.pos.y);
 				const star = galaxy.findStarAt(x, y);
-				document.getElementById('inspector').innerHTML = JSON.stringify(star);
+				selectSystem(star);
 				console.log(`x: ${x} y: ${y} viewport position: ${JSON.stringify(viewport.position)} star: ${JSON.stringify(star)}`);
 			}
 		},
@@ -76,6 +76,16 @@ mainLoop.addToUpdate(viewport);
 
 // debug
 viewport.addToDebug(input.mouse);
+
+function selectSystem(system) {
+	const insptr = document.getElementById('inspector');
+	insptr.innerHTML = '';
+	Object.keys(system).forEach(key => {
+		const div = document.createElement('div');
+		div.innerHTML = `${key}: ${system[key]}`;
+		insptr.appendChild(div);
+	});
+}
 
 function init() {
 	console.log('init');
