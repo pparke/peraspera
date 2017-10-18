@@ -1,7 +1,6 @@
 import React from 'react';
-import { connect } from 'react-redux';
-import { shipRead, sectorRead, systemRead, wormholeRead } from '../actions';
 import { joinGame, move } from '../lib/api';
+import store from '../lib/Store';
 
 // components
 import Pane from './Pane';
@@ -23,9 +22,9 @@ class Dashboard extends React.Component {
   componentDidMount() {
     const { dispatch, sectorRead, shipRead, systemRead, player } = this.props;
     console.log('props are =>', this.props)
-    dispatch(shipRead(player.ship));
-    dispatch(sectorRead());
-    dispatch(systemRead(1));
+    const playerShip = store.findRecord('ships', player.ship);
+    store.findAll('sectors');
+    store.findRecord('systems', 1);
 
   }
 
@@ -41,22 +40,22 @@ class Dashboard extends React.Component {
     return (
       <div className='dashboard'>
         <Pane theme={'clear'} title={'DASHBOARD'}>
-            <Stats header={'Ship'} items={[
+          <Stats header={'Ship'} items={[
                 `Name: ${ship.name}`,
                 `Fuel: ${ship.fuel}`,
                 `Hull: ${ship.hull_integrity}`,
                 `Cargo Space: ${ship.cargo_space}`,
                 `Crew: ${ship.crew}`,
                 `Power: ${ship.power_level}`
-            ]}
-            />
-            <Stats header='System' items={[
+          ]}
+          />
+          <Stats header='System' items={[
                 `Name: ${system.name}`,
                 `Coordinates: ${system.coord_x} ${system.coord_y}`
-            ]}
-            />
+          ]}
+          />
 
-            <Stats header={'Sectors'} items={sectors.map(sector => {
+          <Stats header={'Sectors'} items={sectors.map(sector => {
                 return `id: ${sector.id} Coordinates: ${sector.coord_x} ${sector.coord_y}`
             })}
             />
@@ -72,12 +71,9 @@ class Dashboard extends React.Component {
 
 const mapStateToProps = state => {
     console.log('state is', state)
-    const { player } = state.main;
+    const { player } = state;
     const { sectors, ships, systems } = state;
     return {
-      shipRead,
-      sectorRead,
-      systemRead,
       player: player,
       sector: sectors[player.sector] || {},
       sectors: sectors.ids.map(k => sectors[k]) || [],
@@ -86,4 +82,4 @@ const mapStateToProps = state => {
   }
 };
 
-export default connect(mapStateToProps)(Dashboard);
+export default store.connect(mapStateToProps)(Dashboard);
