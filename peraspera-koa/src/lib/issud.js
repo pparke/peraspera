@@ -4,7 +4,12 @@ const sqp = squel.useFlavour('postgres');
 export async function index(db, table, query) {
   const q = sqp.select().from(table);
   for(const key in query) {
-    q.where(`${key} = ?`, query[key]);
+    if (Array.isArray(query[key])) {
+      q.where(`${key} in (${query[key].join(',')})`);
+    }
+    else {
+      q.where(`${key} = ?`, query[key]);
+    }
   }
   const result = await db.query(q.toString());
   return result.rows;

@@ -1,7 +1,7 @@
 import Star from './Star';
 
 import { checkContentType } from './api';
-import config from '../config';
+import config from '../../config';
 const LYPX = 1;
 
 const starStyles = config.appearance.stars;

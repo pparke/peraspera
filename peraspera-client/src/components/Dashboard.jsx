@@ -24,7 +24,7 @@ class Dashboard extends React.Component {
     console.log('props are =>', this.props)
     const playerShip = store.findRecord('ships', player.ship);
     store.findAll('sectors');
-    store.findRecord('systems', 1);
+    store.findRecord('systems', player.system);
 
   }
 
@@ -34,7 +34,7 @@ class Dashboard extends React.Component {
 
   render() {
     const ship = this.props.playerShip;
-    const system = this.props.system;
+    const system = this.props.currentSystem;
     const sectors = this.props.systemSectors;
     console.log('ship', ship, 'system', system, 'sectors', sectors)
     return (
@@ -57,12 +57,12 @@ class Dashboard extends React.Component {
 
           <Stats header={'Sectors'} items={sectors.map(sector => {
                 return `id: ${sector.id} Coordinates: ${sector.coord_x} ${sector.coord_y}`
-            })}
-            />
+          })}
+          />
 
-            <Stats header='Wormholes' items={[]} />
-            <button style={{width: '100px', height: '30px'}} onClick={joinGame}>Join</button>
-            <button style={{width: '100px', height: '30px'}} onClick={move}>Move</button>
+          <Stats header='Wormholes' items={[]} />
+          <button style={{width: '100px', height: '30px'}} onClick={joinGame}>Join</button>
+          <button style={{width: '100px', height: '30px'}} onClick={move}>Move</button>
         </Pane>
       </div>
     )
@@ -75,16 +75,16 @@ const mapStore = store => {
 
     const { player } = state;
     const playerShip = store.peekRecord('ships', player.ship);
-    const sector = store.peekRecord('sectors', player.sector);
-    const system = store.peekRecord('systems', player.system);
-    const systemSectors = store.peekRecords('sectors', system.sectors);
+    const currentSector = store.peekRecord('sectors', player.sector);
+    const currentSystem = store.peekRecord('systems', player.system);
+    const systemSectors = store.peekRecords('sectors', currentSystem.sectors);
     console.log('received system sectors', systemSectors)
     return {
-      player: { ship: playerShip, sector, system },
-      sector,
+      player,
+      currentSector,
       systemSectors,
       playerShip,
-      system
+      currentSystem
   }
 };
 

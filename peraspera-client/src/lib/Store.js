@@ -113,6 +113,9 @@ export class Store {
 		this.checkContentType(response);
 		const json = await response.json();
 		const record = json[name];
+		if (!this._data[name]) {
+			this._data[name] = {};
+		}
 		this._data[name][id] = record;
 		this.publish();
 		return record;
@@ -125,7 +128,7 @@ export class Store {
 	 * @return {Promise}      [description]
 	 */
 	async findRecords(name, ids) {
-		const params = ids.map(id => `ids[]=${id}`).join('&');
+		const params = ids.map(id => `id=${id}`).join('&');
 		const response = await fetch(`${config.api.url}/${name}?${params}`, { method: 'GET' });
 		this.checkContentType(response);
 		const json = await response.json();
@@ -177,6 +180,16 @@ export class Store {
 		const json = await response.json();
 		const record = json[name];
 		this._data[name][record.id] = record;
+	}
+
+	addView(name, fn) {
+		this._views[name] = fn;
+	}
+
+	async updateView(name) {
+		const view = this._views[name];
+		const data = await view(this);
+		return data;
 	}
 
 	/**
