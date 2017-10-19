@@ -20,7 +20,7 @@ class Dashboard extends React.Component {
   }
 
   componentDidMount() {
-    const { dispatch, sectorRead, shipRead, systemRead, player } = this.props;
+    const { player } = this.props;
     console.log('props are =>', this.props)
     const playerShip = store.findRecord('ships', player.ship);
     store.findAll('sectors');
@@ -33,9 +33,9 @@ class Dashboard extends React.Component {
   }
 
   render() {
-    const ship = this.props.ship;
+    const ship = this.props.playerShip;
     const system = this.props.system;
-    const sectors = this.props.sectors;
+    const sectors = this.props.systemSectors;
     console.log('ship', ship, 'system', system, 'sectors', sectors)
     return (
       <div className='dashboard'>
@@ -69,17 +69,23 @@ class Dashboard extends React.Component {
   }
 }
 
-const mapStateToProps = state => {
+const mapStore = store => {
+    const state = store.getState();
     console.log('state is', state)
+
     const { player } = state;
-    const { sectors, ships, systems } = state;
+    const playerShip = store.peekRecord('ships', player.ship);
+    const sector = store.peekRecord('sectors', player.sector);
+    const system = store.peekRecord('systems', player.system);
+    const systemSectors = store.peekRecords('sectors', system.sectors);
+    console.log('received system sectors', systemSectors)
     return {
-      player: player,
-      sector: sectors[player.sector] || {},
-      sectors: sectors.ids.map(k => sectors[k]) || [],
-      ship: ships[player.ship] || {},
-      system: systems[player.system] || {}
+      player: { ship: playerShip, sector, system },
+      sector,
+      systemSectors,
+      playerShip,
+      system
   }
 };
 
-export default store.connect(mapStateToProps)(Dashboard);
+export default store.connect(mapStore)(Dashboard);

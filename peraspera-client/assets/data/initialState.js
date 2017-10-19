@@ -28,18 +28,6 @@ export default {
 			]
 		}
 	},
-	systems: {
-		ids: []
-	},
-	sectors: {
-		ids: []
-	},
-	planets: {
-		ids: []
-	},
-	ships: {
-		ids: []
-	},
 	menuItems: {
 		'0': {
 			text: 'Sector',
