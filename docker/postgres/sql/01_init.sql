@@ -1,16 +1,22 @@
-CREATE TABLE passwords (
-  id          SERIAL PRIMARY KEY,
-  hash        TEXT NOT NULL,
-  salt        TEXT NOT NULL,
-  created_at  TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-  updated_at  TIMESTAMPTZ NOT NULL DEFAULT NOW()
+CREATE TABLE passwd (
+  id            SERIAL PRIMARY KEY,
+  user_id       INTEGER NOT NULL REFERENCES users,
+  username      TEXT NOT NULL,
+  password      TEXT NOT NULL,
+  hash          TEXT NOT NULL,
+  salt          TEXT NOT NULL,
+  token_verify  TEXT NOT NULL,
+  token_public  TEXT NOT NULL,
+  token_expires TIMESTAMPTZ NOT NULL,
+  created_at    TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at    TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
 CREATE TABLE users (
   id          SERIAL PRIMARY KEY,
-  name        TEXT NOT NULL,
+  handle      TEXT NOT NULL,
   email       TEXT NOT NULL,
-  password    INTEGER REFERENCES passwords,
+  verified    BOOLEAN NOT NULL DEFAULT FALSE,
   created_at  TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   updated_at  TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
@@ -93,6 +99,7 @@ CREATE TABLE ship_type (
 
 CREATE TABLE ships (
   id              SERIAL PRIMARY KEY,
+  user_id         INTEGER REFERENCES users,
   name            TEXT NOT NULL,
   description     TEXT NOT NULL,
   fuel            INTEGER NOT NULL DEFAULT 100,

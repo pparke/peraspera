@@ -28,15 +28,12 @@ export default class Sector extends Model {
     return this.belongsTo(db, System, 'system_id');
   }
 
+  async planets(db) {
+      return this.hasMany(db, Planet, 'system_id');
+  }
 
-    async planets(db) {
-        return this.hasMany(db, Planet, 'system_id');
-    }
-
-
-    async stations(db) {
-        return this.hasMany(db, Station, 'system_id');
-    }
-
+  async stations(db) {
+      return this.hasMany(db, Station, 'system_id');
+  }
 
 }

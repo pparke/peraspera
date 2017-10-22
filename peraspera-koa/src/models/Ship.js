@@ -1,5 +1,6 @@
 import Model from './Model';
 import System from './System';
+import User from './User';
 import squel from 'squel';
 const sqp = squel.useFlavour('postgres');
 
@@ -60,6 +61,10 @@ export default class Ship extends Model {
   /**
    * Relationships
    */
+  async user(db) {
+    return this.belongsTo(db, User, 'user_id');
+  }
+
   async system(db) {
     return this.belongsTo(db, System, 'system_id');
   }

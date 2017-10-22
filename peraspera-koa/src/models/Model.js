@@ -91,6 +91,25 @@ export default class Model {
     return new ModelClass(result.rows[0]);
   }
 
+  static async findWhere(db, query) {
+    const ModelClass = this.constructor;
+    let sql = sqp.select()
+      .from(ModelClass.table.name);
+
+    sql = Object.keys(query).reduce((s, key) => {
+      if (Array.isArray(query[key])) {
+        return s.where(`${key} in ?`, query[key]);
+      }
+      return s.where(`${key} = ?`, query[key]);
+    }, sql);
+
+    sql = sql.limit(1)
+      .toString();
+
+    const result = await db.query(sql);
+    return new ModelClass(result.rows[0]);
+  }
+
   static async findAll(db, ModelClass) {
     const sql = sqp.select()
       .from(ModelClass.table.name)
@@ -98,6 +117,16 @@ export default class Model {
 
     const result = await db.query(sql);
     return result.rows.map(row => new ModelClass(row));
+  }
+
+  static async remove(db, ModelClass, id) {
+    const sql = sqp.delete()
+      .from(ModelClass.table.name)
+      .where('id = ?', id)
+      .toString();
+
+      const result = await db.query(sql);
+      return result.rows[0];
   }
 
   /**

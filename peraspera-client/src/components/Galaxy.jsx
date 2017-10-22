@@ -31,6 +31,7 @@ class GalaxyComponent extends React.Component {
     this.viewport.addToRender(this.galaxy);
     this.mainLoop.addToUpdate(this.viewport);
     this.mainLoop.start();
+    
     this.input = createInput(this.viewport, this.galaxy);
   }
 
