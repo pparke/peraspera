@@ -63,6 +63,10 @@ $clearBg: rgba(0, 0, 30, 0.5);
   flex: 1 auto;
   margin: 10px;
 
+  &.column-display {
+      flex-direction: column;
+  }
+
   .top-bar {
     height: $barHeight;
     background-color: $clearBg;
@@ -97,6 +101,11 @@ $clearBg: rgba(0, 0, 30, 0.5);
     overflow-y: scroll;
     height: 400px;
     display: flex;
+
+    &.column {
+        flex-direction: column;
+    }
+
     pre {
       margin: 0;
     }

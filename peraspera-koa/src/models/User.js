@@ -4,8 +4,8 @@ import Planet from './Planet';
 import Station from './Station';
 import Ship from './Ship';
 import Passwd from '../models/Passwd';
-import hash from './hash';
-import randomToken from './randomToken';
+import hash from '../lib/hash';
+import randomToken from '../lib/randomToken';
 import squel from 'squel';
 const sqp = squel.useFlavour('postgres');
 

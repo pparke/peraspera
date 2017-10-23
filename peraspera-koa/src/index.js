@@ -17,40 +17,40 @@ import staticServer from 'koa-static';
 const app = new Koa();
 const api = koaRouter();
 const accessLogStream = fs.createWriteStream(
-  path.join(__dirname, '..', 'logs', 'access.log'),
-  { flags: 'a' }
+	path.join(__dirname, '..', 'logs', 'access.log'),
+	{ flags: 'a' }
 );
 
 app.use(morgan('combined', { stream: accessLogStream }))
-    .use(morgan('dev'))
-    .use(errorHandler)
-    .use(cors())
-    .use(bodyParser())
-    .use(database)
-    .use(staticServer(path.join(__dirname, '..', 'public')));
+	.use(morgan('dev'))
+	.use(errorHandler)
+	.use(cors())
+	.use(bodyParser())
+	.use(database)
+	.use(staticServer(path.join(__dirname, '..', 'public')));
 
 app.use(session({
-  store: new SessionStore()
+	store: new SessionStore()
 }));
 
 // connect api endpoints to routes based on name
 for(const route in routes) {
-  api.use(`/${route}`, routes[route].routes(), routes[route].allowedMethods());
+	api.use(`/${route}`, routes[route].routes(), routes[route].allowedMethods());
 }
 
 // router middleware
 app.use(api.routes())
-    .use(api.allowedMethods());
+.use(api.allowedMethods());
 
 // start listening
 const server = app.listen(config.api.port || 3000, () => {
-  console.log(`Koa is now listening on port ${config.api.port}`);
+	console.log(`Koa is now listening on port ${config.api.port}`);
 });
 
 // socket.io
 const io = new IO(server);
 
 io.on('connection', (socket) => {
-  console.log(`New Connection!\n=> from ${socket.id}`);
-  io.emit('msg', `[All]: ${socket.id} joined.`);
+	console.log(`New Connection!\n=> from ${socket.id}`);
+	io.emit('msg', `[All]: ${socket.id} joined.`);
 });

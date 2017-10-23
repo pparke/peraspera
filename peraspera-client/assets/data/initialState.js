@@ -24,6 +24,10 @@ export default {
 				{
 					text: 'Dashboard',
 					link: 'dashboard'
+				},
+				{
+					text: 'Signup',
+					link: 'signup'
 				}
 			]
 		}

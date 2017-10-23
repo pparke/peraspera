@@ -21,6 +21,7 @@
     "instrument": false
   },
   "dependencies": {
+    "base64url": "^2.0.0",
     "dotenv": "^2.0.0",
     "kcors": "2",
     "koa": "2",

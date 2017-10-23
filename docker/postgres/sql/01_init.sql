@@ -1,3 +1,12 @@
+CREATE TABLE users (
+    id          SERIAL PRIMARY KEY,
+    handle      TEXT NOT NULL,
+    email       TEXT NOT NULL,
+    verified    BOOLEAN NOT NULL DEFAULT FALSE,
+    created_at  TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at  TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
 CREATE TABLE passwd (
   id            SERIAL PRIMARY KEY,
   user_id       INTEGER NOT NULL REFERENCES users,
@@ -10,15 +19,6 @@ CREATE TABLE passwd (
   token_expires TIMESTAMPTZ NOT NULL,
   created_at    TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   updated_at    TIMESTAMPTZ NOT NULL DEFAULT NOW()
-);
-
-CREATE TABLE users (
-  id          SERIAL PRIMARY KEY,
-  handle      TEXT NOT NULL,
-  email       TEXT NOT NULL,
-  verified    BOOLEAN NOT NULL DEFAULT FALSE,
-  created_at  TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-  updated_at  TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
 CREATE TABLE star_type (
