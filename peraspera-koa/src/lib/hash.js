@@ -8,7 +8,7 @@ export default function hash(pwd, salt) {
   return new Promise(function hashPromise(resolve, reject) {
     // if all three are supplied just run through pbkdf2
     if (arguments.length === 2) {
-      crypto.pbkdf2(pwd, salt, iterations, len, (err, key) => {
+      crypto.pbkdf2(pwd, salt, iterations, len, 'sha512', (err, key) => {
         if (err) {
           reject(err);
         }
@@ -23,7 +23,7 @@ export default function hash(pwd, salt) {
           return reject(err);
         }
         salt = result.toString('base64');
-        crypto.pbkdf2(pwd, salt, iterations, len, (err2, key) => {
+        crypto.pbkdf2(pwd, salt, iterations, len, 'sha512', (err2, key) => {
           if (err2) {
             return reject(err);
           }

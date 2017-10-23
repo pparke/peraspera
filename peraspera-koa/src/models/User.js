@@ -7,6 +7,7 @@ import Passwd from '../models/Passwd';
 import hash from '../lib/hash';
 import randomToken from '../lib/randomToken';
 import squel from 'squel';
+import crypto from 'crypto';
 const sqp = squel.useFlavour('postgres');
 
 const table = {
@@ -54,38 +55,43 @@ export default class User extends Model {
     let passwd;
 
     try {
-      await user.save();
+      await user.save(db);
+      console.log('user created', user)
       const salt = crypto.randomBytes(64).toString('base64');
 
       // { salt, key }
       const hashResult = await hash(details.password, salt);
 
+      const date = new Date(Date.now() + (1000 * 60 * 60 * 24 * 7));
+      const expires = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
+
       passwd = new Passwd({
-        user: user.id,
+        user_id: user.id,
         username: details.username,
         password: hashResult.key.toString('hex'),
         salt,
         token_verify: randomToken(15),
         token_public: randomToken(30),
-        token_expires: Date.now() + (1000 * 60 * 60 * 24 * 7)
+        token_expires: expires
       });
 
-      await passwd.save();
+      await passwd.save(db);
       // set the passwd relationship on the user record
       user.passwd = passwd.id;
 
-      await user.save();
+      await user.save(db);
 
       return { user, passwd };
     }
     catch (reason) {
+      console.log('User creation failed', reason);
       // remove the created user
       if (user) {
-        await User.remove(db, 'users', user.id);
+        await User.remove(db, user.id);
       }
       // remove the created passwd
       if (passwd) {
-        Passwd.remove(db, 'passwd', passwd.id);
+        Passwd.remove(db, passwd.id);
       }
 
       throw reason;

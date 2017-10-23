@@ -33,10 +33,12 @@ login.post('/new', async (ctx, next) => {
 	const { db, request } = ctx;
 	const details = {};
 
-	details.handle = request.handle;
-	details.username = request.username;
-	details.password = request.password;
-	details.email = request.email;
+	console.log('request is', request.body)
+
+	details.handle = request.body.handle;
+	details.username = request.body.username;
+	details.password = request.body.password;
+	details.email = request.body.email;
 
 	if (!details.username || !details.password) {
 		ctx.throw(400, new Error('Missing username or password'));

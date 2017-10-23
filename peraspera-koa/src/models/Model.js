@@ -119,7 +119,8 @@ export default class Model {
     return result.rows.map(row => new ModelClass(row));
   }
 
-  static async remove(db, ModelClass, id) {
+  static async remove(db, id) {
+    const ModelClass = this.constructor;
     const sql = sqp.delete()
       .from(ModelClass.table.name)
       .where('id = ?', id)

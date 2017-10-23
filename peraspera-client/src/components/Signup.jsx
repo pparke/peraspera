@@ -29,7 +29,10 @@ export default class Signup extends React.Component {
 	}
 
 	handleChange(event) {
-		console.log(event.target);
+		console.log(event.target, event.target.name, event.target.value);
+		this.setState({
+			[event.target.name]: event.target.value
+		});
 	}
 
 	async handleSubmit(event) {
@@ -55,19 +58,19 @@ export default class Signup extends React.Component {
 					<form onSubmit={this.handleSubmit}>
 						<label>
 							Username:
-							<input type="text" name="username" />
+							<input type="text" name="username" onChange={this.handleChange}/>
 						</label>
 						<label>
 							Handle:
-							<input type="text" name="handle" />
+							<input type="text" name="handle" onChange={this.handleChange} />
 						</label>
 						<label>
 							Email:
-							<input type="email" name="email" />
+							<input type="email" name="email" onChange={this.handleChange} />
 						</label>
 						<label>
 							Password:
-							<input type="password" name="password" />
+							<input type="password" name="password" onChange={this.handleChange} />
 						</label>
 						<input type="submit" value="Submit" />
 					</form>
@@ -88,5 +91,5 @@ async function signupRequest(data) {
 	});
 	checkContentType(response);
 	const json = await response.json();
-	return json.ship;
+	return json;
 }
