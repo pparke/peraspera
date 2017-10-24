@@ -39,16 +39,3 @@ class Navbar extends React.Component {
 }
 
 export default Navbar;
-
-/*
-const itemsSelector = state => state.getIn(['menus', 'main', 'menuItems']).map(id => state.getIn(['menuItems', id]));
-
-function mapStateToProps(state) {
-  return {
-    title: state.get('title'),
-    items: itemsSelector(state)
-  }
-}
-
-export default connect(mapStateToProps)(Navbar);
-*/

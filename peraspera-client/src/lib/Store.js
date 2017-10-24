@@ -1,4 +1,6 @@
 import React from 'react';
+import merge from 'deepmerge';
+import clone from 'clone';
 import config from '../../config.js';
 const singleton = Symbol();
 const enforcer = Symbol();
@@ -44,48 +46,27 @@ export class Store {
 	}
 
 	/**
-	 * Deep clone an object
-	 * @param  {[type]} obj [description]
-	 * @return {[type]}     [description]
-	 */
-	clone(obj) {
-		if (obj === null || typeof obj !== "object"){
-			return obj;
-		}
-		else if (Array.isArray(obj)){
-			var clonedArr = [];
-			obj.forEach((element) => {
-				clonedArr.push(this.clone(element))
-			});
-			return clonedArr;
-		}
-		else {
-			let clonedObj = {};
-			for (var prop in obj){
-				if(obj.hasOwnProperty(prop)){
-					clonedObj[prop] = this.clone(obj[prop]);
-				}
-			}
-			return clonedObj;
-		}
-	}
-
-	/**
 	 * Initialize the store state and data
 	 * @param  {[type]} state [description]
 	 * @return {[type]}       [description]
 	 */
 	initialize(state = {}, data = {}) {
-		this._state = this.clone(state);
-		this._data = this.clone(data);
+		this._state = clone(state);
+		this._data = clone(data);
 	}
 
 	/**
 	 * Return the store state
 	 * @return {[type]} [description]
 	 */
-	getState() {
+	get state() {
 		return this._state;
+	}
+
+	setState(partial) {
+		this._state = merge(this._state, partial);
+		console.log('state is now', this._state);
+		this.publish();
 	}
 
 	peekRecord(name, id) {

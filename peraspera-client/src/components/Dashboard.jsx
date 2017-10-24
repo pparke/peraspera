@@ -70,7 +70,7 @@ class Dashboard extends React.Component {
 }
 
 const mapStore = store => {
-    const state = store.getState();
+    const state = store.state;
     console.log('state is', state)
 
     const { player } = state;

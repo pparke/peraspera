@@ -2,9 +2,13 @@ export default {
 	title: 'Per Aspera',
 	currentDisplay: 'sector',
 	player: {
+		userid: null,
+		token_public: null,
+		token_expires: null,
 		ship: 1,
 		sector: 1,
-		system: 1
+		system: 1,
+		loggedIn: false
 	},
 	menus: {
 		main: {

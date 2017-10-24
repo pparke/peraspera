@@ -3,6 +3,7 @@ import { joinGame } from '../lib/api';
 import store from '../lib/Store';
 import config from '../../config';
 import { checkContentType } from '../lib/api';
+import { Redirect } from 'react-router'
 
 // components
 import Pane from './Pane';
@@ -11,7 +12,7 @@ import Pane from './Pane';
 import '../../assets/scss/signup.scss';
 
 
-export default class Signup extends React.Component {
+class Signup extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -44,14 +45,24 @@ export default class Signup extends React.Component {
 			email: this.state.email
 		});
 
-		this.setState({
-			userid: result.userid,
-			token_public: result.token_public,
-			token_expires: result.token_expires
+		console.log('got result', result);
+
+		store.setState({
+			player: {
+				userid: result.userid,
+				token_public: result.token_public,
+				token_expires: result.token_expires,
+				loggedIn: true
+			}
 		});
 	}
 
 	render() {
+		if (this.props.loggedIn) {
+			return (
+				<Redirect to='/dashboard' />
+			);
+		}
 		return (
 			<div className='signup'>
 				<Pane theme={'clear'} title={'SIGNUP'} contentLayout={'column'}>
@@ -93,3 +104,11 @@ async function signupRequest(data) {
 	const json = await response.json();
 	return json;
 }
+
+const mapStore = store => {
+	return {
+		loggedIn: store.state.player.loggedIn
+	}
+};
+
+export default store.connect(mapStore)(Signup);
