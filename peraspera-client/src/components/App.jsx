@@ -9,6 +9,7 @@ import Logo from '../../assets/svg/logo.svg';
 import Dashboard from './Dashboard';
 import Galaxy from './Galaxy';
 import Signup from './Signup';
+import Login from './Login';
 
 // styles
 import '../../assets/scss/app.scss';
@@ -43,8 +44,9 @@ const App = () => (
 			<Route path='/system' component={SystemPage} />
 			<Route path='/ship' component={ShipPage} />
 			<Route path='/dashboard' component={Dashboard} />
-            <Route path='/signup' component={Signup} />
-      <Route path='/galaxy' component={Galaxy} />
+			<Route path='/signup' component={Signup} />
+			<Route path='/login' component={Login} />
+			<Route path='/galaxy' component={Galaxy} />
 		</Switch>
 	</div>
 );

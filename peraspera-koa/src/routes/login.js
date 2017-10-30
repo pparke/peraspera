@@ -2,6 +2,7 @@ import User from '../models/User';
 import Passwd from '../models/Passwd';
 import router from 'koa-router';
 import config from '../config';
+import authorize from '../lib/authorize';
 
 const login = router();
 
@@ -11,7 +12,9 @@ login.post('/', async (ctx, next) => {
 	const auth = ctx.headers.authorization;
 
 	// attempt to authorize with the received headers
-	const passwd = Passwd.passwordAuth(db, auth);
+	const passwd = await authorize(db, auth);
+
+	console.log('got passwd', passwd);
 
 	ctx.body = ctx.body || {};
 	ctx.body.token = passwd.token_public;

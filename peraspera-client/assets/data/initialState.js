@@ -32,6 +32,10 @@ export default {
 				{
 					text: 'Signup',
 					link: 'signup'
+				},
+				{
+					text: 'Login',
+					link: 'login'
 				}
 			]
 		}

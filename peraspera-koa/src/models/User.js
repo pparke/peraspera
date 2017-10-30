@@ -62,8 +62,7 @@ export default class User extends Model {
       // { salt, key }
       const hashResult = await hash(details.password, salt);
 
-      const date = new Date(Date.now() + (1000 * 60 * 60 * 24 * 7));
-      const expires = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
+      const expires = new Date(Date.now() + (1000 * 60 * 60 * 24 * 7));
 
       passwd = new Passwd({
         user_id: user.id,

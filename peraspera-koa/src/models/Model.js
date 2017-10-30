@@ -3,169 +3,171 @@ const sqp = squel.useFlavour('postgres');
 
 export default class Model {
 
-  constructor() {
-  }
-
-  pick(o, props) {
-    return Object.assign({}, ...props.map(prop => ({ [prop]: o[prop] })));
-  }
-
-	get table() {
-		return this.constructor.table.name;
-	}
-
-	get fields() {
-		return this.constructor.table.fields;
-	}
-
-	serialize() {
-		return this.fields.reduce((obj, field) => {
-			obj[field] = this[field];
-			return obj;
-		}, {});
-	}
-
-  async save(db) {
-    const _class = this.constructor;
-    if (!this.id) {
-      const record = await Model.insert(db, _class, this);
-      this.id = record.id;
-      if (_class.table.fields.includes('created_at')) {
-        this.created_at = record.created_at;
-      }
-      if (_class.table.fields.includes('updated_at')) {
-        this.updated_at = record.updated_at;
-      }
-      return this;
+    constructor() {
     }
 
-    const record = await Model.update(db, _class, this);
-    if (_class.table.fields.includes('updated_at')) {
-      this.updated_at = record.updated_at;
+    pick(o, props) {
+        return Object.assign({}, ...props.map(prop => ({ [prop]: o[prop] })));
     }
-    return this;
-  }
 
-  static async insert(db, ModelClass, record) {
-    let stmt = sqp.insert()
-       .into(ModelClass.table.name);
-
-    ModelClass.table.assignable.forEach((field) => {
-      if (typeof record[field] !== 'undefined') {
-        stmt = stmt.set(field, record[field]);
-      }
-    });
-
-    const sql = stmt.returning('*').toString();
-
-    const result = await db.query(sql);
-    return result.rows[0];
-  }
-
-  static async update(db, ModelClass, record) {
-    let stmt = sqp.update()
-      .table(ModelClass.table.name);
-
-    ModelClass.table.assignable.forEach((field) => {
-      if (typeof record[field] !== 'undefined') {
-        stmt = stmt.set(field, record[field]);
-      }
-    });
-    if (ModelClass.table.fields.includes('updated_at')) {
-      stmt = stmt.set('updated_at', 'NOW()');
+    get table() {
+        return this.constructor.table;
     }
-    const sql = stmt.returning('*').toString();
 
-    const result = await db.query(sql);
-    return result.rows[0];
-  }
+    get fields() {
+        return this.constructor.table.fields;
+    }
 
-  static async find(db, ModelClass, id) {
-    const sql = sqp.select()
-      .from(ModelClass.table.name)
-      .where('id = ?', id)
-      .limit(1)
-      .toString();
+    get name() {
+        return this.constructor.table.name;
+    }
 
-    const result = await db.query(sql);
-    return new ModelClass(result.rows[0]);
-  }
+    serialize() {
+        return this.fields.reduce((obj, field) => {
+            obj[field] = this[field];
+            return obj;
+        }, {});
+    }
 
-  static async findWhere(db, query) {
-    const ModelClass = this.constructor;
-    let sql = sqp.select()
-      .from(ModelClass.table.name);
+    async save(db) {
+        const _class = this.constructor;
+        if (!this.id) {
+            const record = await Model.insert(db, _class, this);
+            this.id = record.id;
+            if (_class.table.fields.includes('created_at')) {
+                this.created_at = record.created_at;
+            }
+            if (_class.table.fields.includes('updated_at')) {
+                this.updated_at = record.updated_at;
+            }
+            return this;
+        }
 
-    sql = Object.keys(query).reduce((s, key) => {
-      if (Array.isArray(query[key])) {
-        return s.where(`${key} in ?`, query[key]);
-      }
-      return s.where(`${key} = ?`, query[key]);
-    }, sql);
+        const record = await Model.update(db, _class, this);
+        if (_class.table.fields.includes('updated_at')) {
+            this.updated_at = record.updated_at;
+        }
+        return this;
+    }
 
-    sql = sql.limit(1)
-      .toString();
+    static async insert(db, ModelClass, record) {
+        let stmt = sqp.insert()
+        .into(ModelClass.table.name);
 
-    const result = await db.query(sql);
-    return new ModelClass(result.rows[0]);
-  }
+        ModelClass.table.assignable.forEach((field) => {
+            if (typeof record[field] !== 'undefined') {
+                stmt = stmt.set(field, record[field]);
+            }
+        });
 
-  static async findAll(db, ModelClass) {
-    const sql = sqp.select()
-      .from(ModelClass.table.name)
-      .toString();
+        const sql = stmt.returning('*').toString();
 
-    const result = await db.query(sql);
-    return result.rows.map(row => new ModelClass(row));
-  }
+        const result = await db.query(sql);
+        return result.rows[0];
+    }
 
-  static async remove(db, id) {
-    const ModelClass = this.constructor;
-    const sql = sqp.delete()
-      .from(ModelClass.table.name)
-      .where('id = ?', id)
-      .toString();
+    static async update(db, ModelClass, record) {
+        let stmt = sqp.update()
+        .table(ModelClass.table.name);
 
-      const result = await db.query(sql);
-      return result.rows[0];
-  }
+        ModelClass.table.assignable.forEach((field) => {
+            if (typeof record[field] !== 'undefined') {
+                stmt = stmt.set(field, record[field]);
+            }
+        });
+        if (ModelClass.table.fields.includes('updated_at')) {
+            stmt = stmt.set('updated_at', 'NOW()');
+        }
+        const sql = stmt.returning('*').toString();
 
-  /**
-   * Find the record that belongs to this
-   * record
-   * @param  {Model}  model  the class of the model we're looking for
-   * @param  {string}  fkey  the foreign key on the table
-   * @return {Promise}       [description]
-   */
-  async hasOne(db, ModelClass, fkey) {
-    const sql = sqp.select()
-      .from(ModelClass.table.name)
-      .where(`${fkey} = ?`, this.id)
-      .limit(1)
-      .toString();
+        const result = await db.query(sql);
+        return result.rows[0];
+    }
 
-    const result = await db.query(sql);
-    return new ModelClass(result.rows[0]);
-  }
+    static async find(db, ModelClass, id) {
+        const sql = sqp.select()
+        .from(ModelClass.table.name)
+        .where('id = ?', id)
+        .limit(1)
+        .toString();
 
-  async belongsTo(db, ModelClass, fkey) {
-    const sql = sqp.select()
-      .from(ModelClass.table.name)
-      .where('id = ?', this[fkey])
-      .limit(1)
-      .toString();
+        const result = await db.query(sql);
+        return new ModelClass(result.rows[0]);
+    }
 
-    const result = await db.query(sql);
-    return new ModelClass(result.rows[0]);
-  }
+    static async findWhere(db, ModelClass, query) {
+        let sql = sqp.select()
+        .from(ModelClass.table.name);
 
-  async hasMany(db, ModelClass, fkey) {
-    const sql = sqp.select()
-      .from(ModelClass.table.name)
-      .where(`${fkey} = ?`, this.id)
-      .toString();
+        sql = Object.keys(query).reduce((s, key) => {
+            if (Array.isArray(query[key])) {
+                return s.where(`${key} in ?`, query[key]);
+            }
+            return s.where(`${key} = ?`, query[key]);
+        }, sql);
 
-    const result = await db.query(sql);
-    return result.rows.map(record => new ModelClass(record));
-  }
+        sql = sql.limit(1)
+        .toString();
+
+        const result = await db.query(sql);
+        return new ModelClass(result.rows[0]);
+    }
+
+    static async findAll(db, ModelClass) {
+        const sql = sqp.select()
+        .from(ModelClass.table.name)
+        .toString();
+
+        const result = await db.query(sql);
+        return result.rows.map(row => new ModelClass(row));
+    }
+
+    static async remove(db, ModelClass, id) {
+        const sql = sqp.delete()
+        .from(ModelClass.table.name)
+        .where('id = ?', id)
+        .toString();
+
+        const result = await db.query(sql);
+        return result.rows[0];
+    }
+
+    /**
+    * Find the record that belongs to this
+    * record
+    * @param  {Model}  model  the class of the model we're looking for
+    * @param  {string}  fkey  the foreign key on the table
+    * @return {Promise}       [description]
+    */
+    async hasOne(db, ModelClass, fkey) {
+        const sql = sqp.select()
+        .from(ModelClass.table.name)
+        .where(`${fkey} = ?`, this.id)
+        .limit(1)
+        .toString();
+
+        const result = await db.query(sql);
+        return new ModelClass(result.rows[0]);
+    }
+
+    async belongsTo(db, ModelClass, fkey) {
+        const sql = sqp.select()
+        .from(ModelClass.table.name)
+        .where('id = ?', this[fkey])
+        .limit(1)
+        .toString();
+
+        const result = await db.query(sql);
+        return new ModelClass(result.rows[0]);
+    }
+
+    async hasMany(db, ModelClass, fkey) {
+        const sql = sqp.select()
+        .from(ModelClass.table.name)
+        .where(`${fkey} = ?`, this.id)
+        .toString();
+
+        const result = await db.query(sql);
+        return result.rows.map(record => new ModelClass(record));
+    }
 }
