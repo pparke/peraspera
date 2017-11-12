@@ -61,7 +61,6 @@ class Dashboard extends React.Component {
           />
 
           <Stats header='Wormholes' items={[]} />
-          <button style={{width: '100px', height: '30px'}} onClick={joinGame}>Join</button>
           <button style={{width: '100px', height: '30px'}} onClick={move}>Move</button>
         </Pane>
       </div>
@@ -74,9 +73,13 @@ const mapStore = store => {
     console.log('state is', state)
 
     const { player } = state;
+    // get the current ship the player is on
     const playerShip = store.peekRecord('ships', player.ship);
+    // get the current sector the player is in
     const currentSector = store.peekRecord('sectors', player.sector);
+    // get the systems the player is in
     const currentSystem = store.peekRecord('systems', player.system);
+    // get all the sectors in the current system
     const systemSectors = store.peekRecords('sectors', currentSystem.sectors);
     console.log('received system sectors', systemSectors)
     return {

@@ -17,25 +17,37 @@ class GalaxyComponent extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      systems: {},
       currentSystem: null
     };
 
     this.setupGalaxy = this.setupGalaxy.bind(this);
   }
 
+  componentDidMount() {
+      const { player } = this.props;
+      store.findRecord('ships', player.ship);
+      store.findAll('systems');
+      store.findAll('wormholes');
+      store.findAll('starTypes');
+  }
+
   setupGalaxy(ctx) {
+    const { systems, wormholes, ships, starTypes } = this.props;
     this.viewport = new Viewport(800, 600, ctx);
     this.mainLoop = new MainLoop();
-    this.galaxy = new Galaxy();
+    this.galaxy = new Galaxy({ systems, wormholes, ships, starTypes });
     this.viewport.addToRender(this.galaxy);
     this.mainLoop.addToUpdate(this.viewport);
     this.mainLoop.start();
-    
+
     this.input = createInput(this.viewport, this.galaxy);
   }
 
   render() {
+      if (this.galaxy) {
+          const { systems, wormholes, ships, starTypes } = this.props;
+          this.galaxy.setEntities(systems, starTypes, wormholes, ships);
+      }
     return (
       <div className='galaxy' style={style}>
         <Canvas onMount={this.setupGalaxy} />
@@ -92,7 +104,24 @@ function createInput(viewport, galaxy) {
 }
 
 const mapStore = store => {
+    const state = store.state;
 
+    const { player } = state;
+    // get the current ship the player is on
+    const playerShip = store.peekRecord('ships', player.ship);
+
+    const systems = store.peekAll('systems');
+    const wormholes = store.peekAll('wormholes');
+    const starTypes = store.peekAll('starTypes');
+
+    return {
+        player,
+        playerShip,
+        systems,
+        wormholes,
+        starTypes,
+        ships: {}
+    }
 }
 
 export default store.connect(mapStore)(GalaxyComponent);

@@ -8,3 +8,4 @@ export { default as wormholes } from './wormholes';
 export { default as ships } from './ships';
 export { default as game } from './game';
 export { default as login } from './login';
+export { default as character } from './character';

@@ -1,6 +1,5 @@
 CREATE TABLE users (
     id          SERIAL PRIMARY KEY,
-    handle      TEXT NOT NULL,
     email       TEXT NOT NULL,
     verified    BOOLEAN NOT NULL DEFAULT FALSE,
     created_at  TIMESTAMP NOT NULL DEFAULT NOW(),
@@ -63,10 +62,10 @@ CREATE TABLE planets (
   id          SERIAL PRIMARY KEY,
   name        TEXT NOT NULL,
   description TEXT NOT NULL,
-	mass			REAL NOT NULL,
-	population		BIGINT DEFAULT 0,
-	temperature		INTEGER,
-	atmosphere		TEXT,
+  mass        REAL NOT NULL,
+  population  BIGINT DEFAULT 0,
+  temperature INTEGER,
+  atmosphere  TEXT,
   system_id   INTEGER REFERENCES systems,
   sector_id   INTEGER REFERENCES sectors,
   created_at  TIMESTAMP NOT NULL DEFAULT NOW(),
@@ -122,6 +121,48 @@ CREATE TABLE items (
   name        TEXT NOT NULL,
   created_at  TIMESTAMP NOT NULL DEFAULT NOW(),
   updated_at  TIMESTAMP NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE skills (
+    id          SERIAL PRIMARY KEY,
+    name        TEXT
+);
+
+CREATE TABLE classes (
+    id          SERIAL PRIMARY KEY,
+    name        TEXT
+);
+
+CREATE TABLE characters (
+  id            SERIAL PRIMARY KEY,
+  user_id       INTEGER REFERENCES users,
+  name          TEXT NOT NULL,
+  strength      INTEGER NOT NULL,
+  intelligence  INTEGER NOT NULL,
+  wisdom        INTEGER NOT NULL,
+  dexterity     INTEGER NOT NULL,
+  constitution  INTEGER NOT NULL,
+  charisma      INTEGER NOT NULL,
+  class_id      INTEGER REFERENCES classes,
+  hit_dice      TEXT,
+  hp            INTEGER NOT NULL
+);
+
+CREATE TABLE character_skill_bind (
+    id              SERIAL PRIMARY KEY,
+    skill_id        INTEGER NOT NULL REFERENCES skills,
+    character_id    INTEGER NOT NULL REFERENCES characters,
+    level           INTEGER NOT NULL DEFAULT 1,
+    practice        INTEGER NOT NULL DEFAULT 0
+);
+
+CREATE TABLE sessions (
+    id              SERIAL PRIMARY KEY,
+    ship_id         INTEGER REFERENCES ships,
+    sector_id       INTEGER REFERENCES sectors,
+    system_id       INTEGER REFERENCES systems,
+    planet_id       INTEGER REFERENCES planets,
+    station_id      INTEGER REFERENCES stations
 );
 
 GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO peraspera;

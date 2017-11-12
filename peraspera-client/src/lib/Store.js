@@ -72,7 +72,7 @@ export class Store {
 	peekRecord(name, id) {
 		const records = this._data[name];
 		if (!records) return {};
-		return this._data[name][id] || {};
+		return this._data[name].entities[id] || {};
 	}
 
 	peekRecords(name, ids = []) {
@@ -81,6 +81,12 @@ export class Store {
 			records.push(this.peekRecord(name, id));
 		}
 		return records;
+	}
+
+	peekAll(name) {
+		const records = this._data[name];
+		if (!records) return [];
+		return Object.values(records.entities);
 	}
 
 	/**
@@ -94,10 +100,7 @@ export class Store {
 		this.checkContentType(response);
 		const json = await response.json();
 		const record = json[name];
-		if (!this._data[name]) {
-			this._data[name] = {};
-		}
-		this._data[name][id] = record;
+		this.addRecord(name, record);
 		this.publish();
 		return record;
 	}
@@ -115,7 +118,7 @@ export class Store {
 		const json = await response.json();
 		const records = json[name];
 		for (record of records) {
-			this._data[name][id] = record;
+			this.addRecord(name, record);
 		}
 		this.publish();
 		return records;
@@ -131,7 +134,8 @@ export class Store {
 		this.checkContentType(response);
 		const json = await response.json();
 		const records = json[name];
-		this._data[name] = records.reduce((obj, item) => {
+		this._data[name] = {};
+		this._data[name].entities = records.reduce((obj, item) => {
 			obj[item.id] = item;
 			return obj;
 		}, {});
@@ -160,7 +164,35 @@ export class Store {
 		});
 		const json = await response.json();
 		const record = json[name];
-		this._data[name][record.id] = record;
+		this.addRecord(name, record);
+	}
+
+	addRecord(name, record) {
+		if (!record) throw new Error(`Record is undefined ${name}`)
+		// create the table if it doesn't exist
+		if (!this._data[name]) {
+			this._data[name] = {
+				entities: {},
+				ids: []
+			};
+		}
+		const { id } = record;
+		this._data[name].entities[id] = record;
+		// add the id if it isn't present
+		if (this._data[name].ids.indexOf(id) < 0) {
+			this._date[name].ids.push(id);
+		}
+	}
+
+	removeRecord(name, id) {
+		if (!this._data[name]) {
+			throw new Error(`No table named ${name}`);
+		}
+		delete this._data[name].entities[id];
+		const index = this._data[name].ids.indexOf(id);
+		if (index  > -1) {
+			this._date[name].ids.splice(index, 1);
+		}
 	}
 
 	addView(name, fn) {

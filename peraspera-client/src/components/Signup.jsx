@@ -17,7 +17,6 @@ class Signup extends React.Component {
 		super(props);
 		this.state = {
 			username: '',
-			handle: '',
 			email: '',
 			password: '',
 			userid: '',
@@ -40,7 +39,6 @@ class Signup extends React.Component {
 		event.preventDefault();
 		const result = await signupRequest({
 			username: this.state.username,
-			handle: this.state.handle,
 			password: this.state.password,
 			email: this.state.email
 		});
@@ -70,10 +68,6 @@ class Signup extends React.Component {
 						<label>
 							Username:
 							<input type="text" name="username" onChange={this.handleChange}/>
-						</label>
-						<label>
-							Handle:
-							<input type="text" name="handle" onChange={this.handleChange} />
 						</label>
 						<label>
 							Email:

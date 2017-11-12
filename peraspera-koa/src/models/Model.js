@@ -18,10 +18,6 @@ export default class Model {
         return this.constructor.table.fields;
     }
 
-    get name() {
-        return this.constructor.table.name;
-    }
-
     serialize() {
         return this.fields.reduce((obj, field) => {
             obj[field] = this[field];
@@ -145,6 +141,8 @@ export default class Model {
         .where(`${fkey} = ?`, this.id)
         .limit(1)
         .toString();
+
+        console.log('sql:', sql)
 
         const result = await db.query(sql);
         return new ModelClass(result.rows[0]);

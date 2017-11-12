@@ -4,6 +4,7 @@ import Planet from './Planet';
 import Station from './Station';
 import Ship from './Ship';
 import Passwd from '../models/Passwd';
+import Character from './Character';
 import hash from '../lib/hash';
 import randomToken from '../lib/randomToken';
 import squel from 'squel';
@@ -12,16 +13,15 @@ const sqp = squel.useFlavour('postgres');
 
 const table = {
   name: 'users',
-  fields: ['id', 'email', 'handle', 'verified'],
-  assignable: ['email', 'handle']
+  fields: ['id', 'email', 'verified'],
+  assignable: ['email']
 };
 
 export default class User extends Model {
-  constructor({ id, email, handle, verified } = {}) {
+  constructor({ id, email, verified } = {}) {
     super();
     this.id = id;
     this.email = email;
-    this.handle = handle;
     this.verified = verified;
   }
 
@@ -45,18 +45,20 @@ export default class User extends Model {
       return this.hasMany(db, Ship, 'system_id');
   }
 
+  async character(db) {
+      return this.hasOne(db, Character, 'user_id');
+  }
+
   static async create(db, details) {
     console.log('Creating new User...');
     const user = new User({
       email: details.email || null,
-      handle: details.handle || null,
       verified: false
     });
     let passwd;
 
     try {
       await user.save(db);
-      console.log('user created', user)
       const salt = crypto.randomBytes(64).toString('base64');
 
       // { salt, key }
@@ -71,7 +73,7 @@ export default class User extends Model {
         salt,
         token_verify: randomToken(15),
         token_public: randomToken(30),
-        token_expires: expires
+        token_expires: expires.toUTCString()
       });
 
       await passwd.save(db);

@@ -10,6 +10,7 @@ import Dashboard from './Dashboard';
 import Galaxy from './Galaxy';
 import Signup from './Signup';
 import Login from './Login';
+import CharacterCreation from './CharacterCreation';
 
 // styles
 import '../../assets/scss/app.scss';
@@ -47,6 +48,7 @@ const App = () => (
 			<Route path='/signup' component={Signup} />
 			<Route path='/login' component={Login} />
 			<Route path='/galaxy' component={Galaxy} />
+            <Route path='/character-creation' component={CharacterCreation} />
 		</Switch>
 	</div>
 );

@@ -12,20 +12,21 @@ login.post('/', async (ctx, next) => {
 	const auth = ctx.headers.authorization;
 
 	// attempt to authorize with the received headers
-	const passwd = await authorize(db, auth);
-
-	console.log('got passwd', passwd);
-
-	ctx.body = ctx.body || {};
-	ctx.body.token = passwd.token_public;
-	ctx.body.userid = passwd.user_id;
-	ctx.body.expires = passwd.token_expires;
-
 	try {
+		const passwd = await authorize(db, auth);
+
+		console.log('got passwd', passwd);
+
+		ctx.body = ctx.body || {};
+		ctx.body.token = passwd.token_public;
+		ctx.body.userid = passwd.user_id;
+		ctx.body.expires = passwd.token_expires;
+		console.log('loading user...')
 		ctx.body.user = await passwd.user(db);
+		console.log('loading character...')
+		ctx.body.character = await ctx.body.user.character(db);
 	}
 	catch (err) {
-		console.log(err);
 		ctx.throw(err.status, err);
 	}
 
@@ -55,6 +56,8 @@ login.post('/new', async (ctx, next) => {
 		ctx.body.userid = user.id.toString();
 		ctx.body.token_public = passwd.token_public;
 		ctx.body.token_expires = passwd.token_expires;
+		ctx.body.user = user;
+		ctx.body.character = null;
 	}
 	catch (reason) {
 		console.log('Account creation failed');

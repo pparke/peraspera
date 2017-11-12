@@ -1,4 +1,5 @@
 import Star from './Star';
+import store from './Store';
 
 import { checkContentType } from './api';
 import config from '../../config';
@@ -7,21 +8,20 @@ const LYPX = 1;
 const starStyles = config.appearance.stars;
 
 export default class Galaxy {
-	constructor() {
+	constructor({ systems, starTypes, wormholes, ships } = {}) {
 		this.stars = [];
 		this.wormholes = [];
+		this.ships = [];
 
-		this.setup();
+
+		this.setEntities(systems, starTypes, wormholes, ships);
 	}
 
-	async setup() {
-		const starTypes = await this.getStarTypes();
-		const systems = await this.getSystems();
-		const wormholes = await this.getWormholes();
-		const ships = await this.getShips();
-		console.log(ships)
+	setEntities(systems, starTypes, wormholes, ships) {
+		console.log('got systems', systems)
 		const stars = systems.map(system => {
 			const type = starTypes.find(type => type.id === system.star_type);
+			console.log(type.name)
 			return {
 				id: system.id,
 				name: system.name,
@@ -42,9 +42,6 @@ export default class Galaxy {
 			w.system_b = systems.find(s => s.id === w.system_b_id);
 			return w;
 		});
-		console.log('stars', this.stars)
-		console.log('ships', ships)
-		console.log('wormholes', this.wormholes)
 	}
 
 	async getStarTypes() {
